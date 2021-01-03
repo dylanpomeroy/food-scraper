@@ -1,34 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Goodfood Scraper
 
-## Getting Started
+## Description
+A NextJS app that parses the goodfood recipe page urls provided and generates 
+a markdown shopping list and recipe details
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
+## Run development
+```
+yarn install
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App will be hosted on http://localhost:3000
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+use VSCode debug task `Debug` to setup breakpoint debugging
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Run production
+### First time setup
+Install nginx
+```
+sudo apt install nginx
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Install curl
+```
+sudo apt install curl
+```
 
-## Learn More
+Install Yarn
+```
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt update && sudo apt install yarn
+sudo apt update && sudo apt install --no-install-recommends yarn
+```
 
-To learn more about Next.js, take a look at the following resources:
+Install pm2
+```
+wget -qO- https://getpm2.com/install.sh | bash
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Install packages
+```
+cd goodfood-scraper
+yarn install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Build app
+```
+yarn build
+```
 
-## Deploy on Vercel
+Run app via pm2
+```
+pm2 start yarn --name "goodfood-scraper" --interpreter bash -- start
+pm2 show goodfood-scraper
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Setup pm2 to run app on startup
+```
+pm2 startup
+pm2 save
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+See source with more info: https://dev.to/reactstockholm/setup-a-next-js-project-with-pm2-nginx-and-yarn-on-ubuntu-18-04-22c9
+
+### Updating and Monitoring
+Monitor app
+```
+pm2 monit
+```
+
+Deploy a new version from git
+```
+git fetch
+git pull
+yarn install
+yarn build
+pm2 restart goodfood-scraper
+```
+
