@@ -21,7 +21,6 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
 
   const substringSortWeights: [string, number][] = [
     [ 'dough', 1000],
-    [ 'rigatoni', 2000],
     [ 'spinach', 3000 ],
     [ 'lettuce', 4000 ],
     [ 'lemon', 4500 ],
@@ -60,6 +59,7 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
     [ 'milk', 29000 ],
     [ 'labneh', 30000 ],
     [ 'tomato paste', 31000 ],
+    [ 'rigatoni', 31500],
     [ 'peas', 32000 ],
   ]
 
@@ -83,7 +83,7 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
       return { ingredient, weight }
     })
     .sort((a, b) => a.weight - b.weight)
-    .forEach(ingredient => content += `- [ ] ${ingredient.ingredient} - ${ingredient.weight}\n`)
+    .forEach(ingredient => content += `- [ ] ${ingredient.ingredient}\n`)
   
   return `${content}\n`
 }
