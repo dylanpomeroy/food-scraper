@@ -6,6 +6,7 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
 
   const removeSubstrings = [
     'spice blend',
+    'spices',
     'garlic clove',
     'vinegar',
     'jasmine rice',

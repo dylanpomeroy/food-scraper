@@ -15,7 +15,7 @@ const Home = () => {
 
   const submitUrls = async () => {
     const recipeData = await axios.post('/api/recipes', {
-      recipeUrls: inputString.split('\n')
+      recipeUrls: inputString.split('\n').filter(inputLine => !inputLine.match(/^\s*$/))
     })
 
     console.log(recipeData.data)
@@ -39,7 +39,6 @@ const Home = () => {
         <button onClick={() => submitUrls()}>Submit</button>
 
         <div style={{border: '1px solid black'}}>
-          {/* <ReactMarkdown children={responseMarkdown} /> */}
           <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
         </div>
       </main>
