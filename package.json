@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' nodemon server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "cross-env NODE_ENV='production' node server.js",
+    "install:service": "qckwinsvc --name \"GoodfoodScraper\" --description \"A hosted web app that converts recipe urls from makegoodfood.com to an organized grocery list\" --script \"C:\\Users\\Dylan Pomeroy\\Developer\\goodfood-scraper\\server.js\" --startImmediately",
+    "uninstall:service": "qckwinsvc --uninstall --name=\"GoodfoodScraper\" --script \"C:\\Users\\Dylan Pomeroy\\Developer\\goodfood-scraper\\server.js\""
   },
   "dependencies": {
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
-    "next": "10.0.4",
+    "next": "^10.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-markdown": "^5.0.3"
@@ -21,6 +23,8 @@
     "@types/node": "^14.14.19",
     "@types/react": "^17.0.0",
     "cross-env": "^7.0.3",
+    "nodemon": "^2.0.7",
+    "qckwinsvc": "^1.0.0",
     "typescript": "^4.1.3"
   }
 }
