@@ -18,21 +18,21 @@ const Home = () => {
       recipeUrls: inputString.split('\n').filter(inputLine => !inputLine.match(/^\s*$/))
     })
 
-    console.log(recipeData.data)
-
-    setResponseMarkdown(recipePrinter.getMarkdownPageContent(recipeData.data, "01/03/2021"))
+    const today = new Date()
+    const dateString = `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`
+    setResponseMarkdown(recipePrinter.getMarkdownPageContent(recipeData.data, dateString))
   }
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Goodfood Scraper</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Goodfood Scraper
+          Goodfood Scraper
         </h1>
 
         <textarea onChange={e => handleInputChanged(e)} rows={10} cols={50} />
