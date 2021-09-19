@@ -7,7 +7,7 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
   const removeSubstrings = [
     'spice blend',
     'spices',
-    'garlic clove',
+    'garlic',
     'vinegar',
     'jasmine rice',
     'demi-glace',
@@ -18,10 +18,13 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
     'peanuts',
     'rice',
     'pine nut',
+    'ponzu',
   ]
 
   const substringSortWeights: [string, number][] = [
     [ 'dough', 1000],
+    [ 'noodles', 2000],
+    [ 'tofu', 2500 ],
     [ 'spinach', 3000 ],
     [ 'lettuce', 4000 ],
     [ 'lemon', 4500 ],
@@ -49,7 +52,6 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
     [ 'string bean', 20500 ],
     [ 'choy', 21000 ],
     [ 'salmon', 22000 ],
-    [ 'tofu', 22500 ],
     [ 'mignons', 22500 ],
     [ 'beef', 23000 ],
     [ 'pork', 24000 ],
