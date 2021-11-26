@@ -24,7 +24,6 @@
     "@types/react": "^17.0.0",
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.7",
-    "qckwinsvc": "^1.0.0",
     "typescript": "^4.1.3"
   }
 }
