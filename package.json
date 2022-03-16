@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS='--inspect' PORT=8080 nodemon server.js",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "cross-env NODE_ENV='production' PORT=8080 node server.js",
     "install:service": "qckwinsvc --name \"GoodfoodScraper\" --description \"A hosted web app that converts recipe urls from makegoodfood.com to an organized grocery list\" --script \"C:\\Users\\Dylan Pomeroy\\Developer\\goodfood-scraper\\server.js\" --startImmediately",

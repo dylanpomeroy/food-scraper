@@ -12,3 +12,10 @@ export interface Ingredient {
     quantityLabel: string
   }
 }
+
+export interface GoodfoodRecipeListItem {
+  title: string
+  detail: string
+  image: string
+  link: string
+}

@@ -1,6 +1,38 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
-import { GoodfoodRecipe, Ingredient } from './types'
+import { GoodfoodRecipe, GoodfoodRecipeListItem, Ingredient } from './types'
+
+const getRecipesList = async (url: string): Promise<GoodfoodRecipeListItem[]> => {
+  console.log('getting recipes list...')
+  const listPageResponse = await axios.get(url)
+
+  const $ = cheerio.load(listPageResponse.data)
+
+  // @ts-ignore
+  const mealLabels = $('.below-classic_meals .col-sm-6 .recipeofweek-box .recipeofweek-title a').toArray().map((x) => x.children[0].data)
+  const mealTitles = []
+  const mealDetails = []
+  for (let i = 0; i < mealLabels.length; i+=2) {
+    mealTitles.push(mealLabels[i])
+    mealDetails.push(mealLabels[i+1])
+  }
+
+  const mealImages = $('.below-classic_meals .col-sm-6 .recipeofweek-box .onmenu-link img').toArray().map((x: cheerio.TagElement) => x.attribs['src'])
+
+  const mealLinks = $('.below-classic_meals .col-sm-6 .recipeofweek-box .onmenu-link').toArray().map((x: cheerio.TagElement) => x.attribs['href'])
+
+  const meals: GoodfoodRecipeListItem[] = []
+  for (let i = 0; i < mealTitles.length; i++) {
+    meals.push({
+      title: mealTitles[i],
+      detail: mealDetails[i],
+      image: mealImages[i],
+      link: mealLinks[i],
+    })
+  }
+
+  return meals;
+}
 
 const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
   const recipes: GoodfoodRecipe[] = []
@@ -71,4 +103,5 @@ const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
 
 export default {
   getRecipes,
+  getRecipesList,
 }
