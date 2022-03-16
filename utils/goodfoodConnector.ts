@@ -3,7 +3,6 @@ import cheerio from 'cheerio'
 import { GoodfoodRecipe, GoodfoodRecipeListItem, Ingredient } from './types'
 
 const getRecipesList = async (url: string): Promise<GoodfoodRecipeListItem[]> => {
-  console.log('getting recipes list...')
   const listPageResponse = await axios.get(url)
 
   const $ = cheerio.load(listPageResponse.data)
