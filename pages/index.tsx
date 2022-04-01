@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import axios from 'axios'
 import recipePrinter from '../utils/goodfoodRecipePrinter'
-import ReactMarkdown from 'react-markdown'
 import { GoodfoodRecipeListItem } from '../utils/types'
+import Config from '../components/Config'
 
 const Home = () => {
   const [responseMarkdown, setResponseMarkdown] = useState('')
@@ -49,8 +49,10 @@ const Home = () => {
     }
   }, [showingMarkdown])
 
+  const pageRootRef = useRef(null);
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={pageRootRef}>
       <Head>
         <title>Goodfood Scraper</title>
         <link rel="icon" href="/favicon.ico" />
@@ -60,6 +62,8 @@ const Home = () => {
         <h1 className={styles.title}>
           Goodfood Scraper
         </h1>
+
+        <Config pageRoot={pageRootRef} />
 
         <p className={styles.pickedAmountLabel}>Picked <b>{pickedRecipeLinks.length}</b> recipes.</p>
         <div className={styles.recipeListContainer}>
