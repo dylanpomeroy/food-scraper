@@ -1,5 +1,4 @@
 import { Low, JSONFile } from 'lowdb'
-import { fileURLToPath } from 'url'
 import { SettingsData } from './types'
 
 
@@ -11,7 +10,7 @@ const init = async () => {
   if (initialized) return
 
   await db.read();
-  db.data ||= { removeSubstrings: [], sortSubstrings: []}
+  db.data ||= { removeSubstrings: [], orderSubstrings: []}
 }
 
 export const saveSettings = async (settings: SettingsData) => {

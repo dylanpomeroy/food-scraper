@@ -22,5 +22,5 @@ export interface GoodfoodRecipeListItem {
 
 export interface SettingsData {
   removeSubstrings: string[];
-  sortSubstrings: [ string, number ][]
+  orderSubstrings: string[],
 }

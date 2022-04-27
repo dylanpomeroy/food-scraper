@@ -9,11 +9,12 @@ const Config = ({ pageRoot }: { pageRoot: any }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [removeSubstringsText, setRemoveSubstringsText] = useState('');
+  const [orderSubstringsText, setOrderSubstringsText] = useState('');
 
   const saveSettings = async () => {
     const settingsObject: SettingsData = {
       removeSubstrings: removeSubstringsText?.split('\n').filter(value => !!value) ?? [],
-      sortSubstrings: [],
+      orderSubstrings: orderSubstringsText?.split('\n').filter(value => !!value) ?? [],
     }
 
     await axios.post('/api/settings', settingsObject)
@@ -26,6 +27,10 @@ const Config = ({ pageRoot }: { pageRoot: any }) => {
       console.log(response)
       if (response.data.removeSubstrings) {
         setRemoveSubstringsText(response.data.removeSubstrings.join('\n'))
+      }
+
+      if (response.data.orderSubstrings) {
+        setOrderSubstringsText(response.data.orderSubstrings.join('\n'))
       }
     }
 
@@ -48,6 +53,33 @@ const Config = ({ pageRoot }: { pageRoot: any }) => {
       <textarea
         value={removeSubstringsText}
         onChange={(event) => setRemoveSubstringsText(event.target.value)}
+        style={{
+          display: 'block',
+          height: '200px',
+        }}
+      />
+
+      <h3>Order substrings</h3>
+      <p>
+        Use this list to determine the sort order of the ingredients in your grocery list. This is helpful for grouping
+        and ordering items as they appear in your grocery store, and saves you from having to sort them manually.
+      </p>
+      <p>
+       For example, if you start at produce, then the meat section, then the aisles, you may want something like:
+      </p>
+      <ul>
+        <li>lime</li>
+        <li>carrot</li>
+        <li>chicken</li>
+        <li>pasta</li>
+        <li>tomato paste</li>
+      </ul>
+      <p>
+        Enter one value on each line.
+      </p>
+      <textarea
+        value={orderSubstringsText}
+        onChange={(event) => setOrderSubstringsText(event.target.value)}
         style={{
           display: 'block',
           height: '200px',
