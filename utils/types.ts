@@ -1,26 +1,26 @@
 export interface GoodfoodRecipe {
-  name: string
-  url: string
-  ingredients: Ingredient[]
+  name: string;
+  url: string;
+  ingredients: Ingredient[];
 }
 
 export interface Ingredient {
-  nameFull: string
-  nameBase: string
+  nameFull: string;
+  nameBase: string;
   nameQuantity: {
-    quantity: number
-    quantityLabel: string
-  }
+    quantity: number;
+    quantityLabel: string;
+  };
 }
 
 export interface GoodfoodRecipeListItem {
-  title: string
-  detail: string
-  image: string
-  link: string
+  title: string;
+  detail: string;
+  image: string;
+  link: string;
 }
 
 export interface SettingsData {
   removeSubstrings: string[];
-  orderSubstrings: string[],
+  orderSubstrings: string[];
 }

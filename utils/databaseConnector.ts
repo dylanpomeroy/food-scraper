@@ -1,33 +1,32 @@
-import { Low, JSONFile } from 'lowdb'
-import { SettingsData } from './types'
+import { Low, JSONFile } from "lowdb";
+import { SettingsData } from "./types";
 
+const adapter = new JSONFile<SettingsData>("settingsDb.json");
+const db = new Low<SettingsData>(adapter);
 
-const adapter = new JSONFile<SettingsData>('settingsDb.json')
-const db = new Low<SettingsData>(adapter)
-
-const initialized = false
+const initialized = false;
 const init = async () => {
-  if (initialized) return
+  if (initialized) return;
 
   await db.read();
-  db.data ||= { removeSubstrings: [], orderSubstrings: []}
-}
+  db.data ||= { removeSubstrings: [], orderSubstrings: [] };
+};
 
 export const saveSettings = async (settings: SettingsData) => {
   if (!initialized) {
-    await init()
+    await init();
   }
 
-  db.data = settings
-  await db.write()
-}
+  db.data = settings;
+  await db.write();
+};
 
 export const getSettings = async (): Promise<SettingsData> => {
   if (!initialized) {
-    await init()
+    await init();
   }
 
-  return db.data
-}
+  return db.data;
+};
 
-init()
+init();

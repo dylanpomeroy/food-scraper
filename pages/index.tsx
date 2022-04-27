@@ -1,53 +1,60 @@
-import Head from 'next/head'
-import { useEffect, useRef, useState } from 'react'
-import styles from '../styles/Home.module.css'
-import axios from 'axios'
-import recipePrinter from '../utils/goodfoodRecipePrinter'
-import { GoodfoodRecipeListItem } from '../utils/types'
-import Config from '../components/Config'
+import Head from "next/head";
+import React, { useEffect, useRef, useState } from "react";
+import styles from "../styles/Home.module.css";
+import axios from "axios";
+import recipePrinter from "../utils/goodfoodRecipePrinter";
+import { GoodfoodRecipeListItem } from "../utils/types";
+import Config from "../components/Config";
 
 const Home = () => {
-  const [responseMarkdown, setResponseMarkdown] = useState('')
-  const [recipeListData, setRecipeListData] = useState<GoodfoodRecipeListItem[]>([])
-  const [pickedRecipeLinks, setPickedRecipeLinks] = useState<string[]>([])
-  const [showingMarkdown, setShowingMarkdown] = useState(false)
+  const [responseMarkdown, setResponseMarkdown] = useState("");
+  const [recipeListData, setRecipeListData] = useState<
+    GoodfoodRecipeListItem[]
+  >([]);
+  const [pickedRecipeLinks, setPickedRecipeLinks] = useState<string[]>([]);
+  const [showingMarkdown, setShowingMarkdown] = useState(false);
 
   const submitButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
   useEffect(() => {
-    parseRecipesPage()
-  }, [])
+    parseRecipesPage();
+  }, []);
 
   const submitUrls = async () => {
-    setResponseMarkdown('')
-    const recipeData = await axios.post('/api/recipes', {
+    setResponseMarkdown("");
+    const recipeData = await axios.post("/api/recipes", {
       recipeUrls: pickedRecipeLinks,
-    })
+    });
 
-    const today = new Date()
-    const dateString = `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`
-    const newResponseMarkdown = recipePrinter.getMarkdownPageContent(recipeData.data, dateString)
-    setResponseMarkdown(newResponseMarkdown)
+    const today = new Date();
+    const dateString = `${
+      today.getMonth() + 1
+    }/${today.getDate()}/${today.getFullYear()}`;
+    const newResponseMarkdown = recipePrinter.getMarkdownPageContent(
+      recipeData.data,
+      dateString
+    );
+    setResponseMarkdown(newResponseMarkdown);
 
-    submitButtonRef.current.scrollIntoView()
-    navigator.clipboard.writeText(newResponseMarkdown)
-  }
+    submitButtonRef.current.scrollIntoView();
+    navigator.clipboard.writeText(newResponseMarkdown);
+  };
 
   const parseRecipesPage = async () => {
-    const recipeListData: any = await axios.get('/api/recipes')
-    setRecipeListData(recipeListData.data)
-  }
+    const recipeListData: any = await axios.get("/api/recipes");
+    setRecipeListData(recipeListData.data);
+  };
 
   const showMarkdownPressed = async () => {
-    setShowingMarkdown(true)
-  }
+    setShowingMarkdown(true);
+  };
 
   useEffect(() => {
     if (showingMarkdown) {
-      markdownTextAreaRef.current.scrollIntoView()
+      markdownTextAreaRef.current.scrollIntoView();
     }
-  }, [showingMarkdown])
+  }, [showingMarkdown]);
 
   const pageRootRef = useRef(null);
 
@@ -59,18 +66,21 @@ const Home = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Goodfood Scraper
-        </h1>
+        <h1 className={styles.title}>Goodfood Scraper</h1>
 
         <Config pageRoot={pageRootRef} />
 
-        <p className={styles.pickedAmountLabel}>Picked <b>{pickedRecipeLinks.length}</b> recipes.</p>
+        <p className={styles.pickedAmountLabel}>
+          Picked <b>{pickedRecipeLinks.length}</b> recipes.
+        </p>
         <div className={styles.recipeListContainer}>
-          {recipeListData.map(((recipeData, index) =>
+          {recipeListData.map((recipeData, index) => (
             <div key={index} className={styles.recipeListItem}>
-              <a href={recipeData.link} target='_blank'>
-                <img src={recipeData.image} className={styles.recipeListItemImage} />
+              <a href={recipeData.link} target="_blank" rel="noreferrer">
+                <img
+                  src={recipeData.image}
+                  className={styles.recipeListItemImage}
+                />
               </a>
               <div className={styles.recipeListItemTitles}>
                 <div style={{}}>
@@ -78,35 +88,65 @@ const Home = () => {
                   <h4 className={styles.marginSmall}>{recipeData.detail}</h4>
                 </div>
                 <button
-                  className={pickedRecipeLinks.includes(recipeData.link) ? styles.recipeListItemButtonPicked : styles.recipeListItemButtonUnpicked}
+                  className={
+                    pickedRecipeLinks.includes(recipeData.link)
+                      ? styles.recipeListItemButtonPicked
+                      : styles.recipeListItemButtonUnpicked
+                  }
                   onClick={() => {
-                    const indexOfPickedLink = pickedRecipeLinks.indexOf(recipeData.link)
+                    const indexOfPickedLink = pickedRecipeLinks.indexOf(
+                      recipeData.link
+                    );
                     if (indexOfPickedLink == -1) {
-                      setPickedRecipeLinks(pickedRecipeLinks.concat(recipeData.link))
+                      setPickedRecipeLinks(
+                        pickedRecipeLinks.concat(recipeData.link)
+                      );
                     } else {
-                      setPickedRecipeLinks(pickedRecipeLinks.splice(indexOfPickedLink, indexOfPickedLink))
+                      setPickedRecipeLinks(
+                        pickedRecipeLinks.splice(
+                          indexOfPickedLink,
+                          indexOfPickedLink
+                        )
+                      );
                     }
-                  }}>
-                    {pickedRecipeLinks.includes(recipeData.link) ? 'Picked' : 'Pick me'}
-                  </button>
+                  }}
+                >
+                  {pickedRecipeLinks.includes(recipeData.link)
+                    ? "Picked"
+                    : "Pick me"}
+                </button>
               </div>
-              
             </div>
           ))}
         </div>
 
-        <button ref={submitButtonRef} className={styles.button} onClick={() => submitUrls()}>Submit</button>
+        <button
+          ref={submitButtonRef}
+          className={styles.button}
+          onClick={() => submitUrls()}
+        >
+          Submit
+        </button>
 
         {responseMarkdown && <h3>Copied to clipboard!</h3>}
 
-        {responseMarkdown && <button className={styles.button} onClick={() => showMarkdownPressed()}>Show markdown</button> }
+        {responseMarkdown && (
+          <button
+            className={styles.button}
+            onClick={() => showMarkdownPressed()}
+          >
+            Show markdown
+          </button>
+        )}
 
-        {showingMarkdown && <div ref={markdownTextAreaRef} style={{border: '1px solid black'}}>
-          <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
-        </div> }
+        {showingMarkdown && (
+          <div ref={markdownTextAreaRef} style={{ border: "1px solid black" }}>
+            <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
+          </div>
+        )}
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
