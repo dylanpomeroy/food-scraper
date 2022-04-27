@@ -19,3 +19,8 @@ export interface GoodfoodRecipeListItem {
   image: string
   link: string
 }
+
+export interface SettingsData {
+  removeSubstrings: string[];
+  sortSubstrings: [ string, number ][]
+}
