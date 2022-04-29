@@ -1,74 +1,17 @@
 import { GoodfoodRecipe } from "./types";
 
-const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
+const writeGroceryList = (
+  recipes: GoodfoodRecipe[],
+  removeSubstrings: string[],
+  orderSubstrings: string[]
+) => {
   const allIngredients: string[] = [];
   const removedIngredients: string[] = [];
 
-  const removeSubstrings = [
-    "spice blend",
-    "spices",
-    "garlic",
-    "vinegar",
-    "jasmine rice",
-    "demi-glace",
-    "ginger",
-    "vinaigrette",
-    "mirin",
-    "soy sauce",
-    "peanuts",
-    "rice",
-    "pine nut",
-    "ponzu",
-  ];
-
-  const substringSortWeights: [string, number][] = [
-    ["dough", 1000],
-    ["noodles", 2000],
-    ["pancetta", 2250],
-    ["tofu", 2500],
-    ["spinach", 3000],
-    ["lettuce", 4000],
-    ["lemon", 4500],
-    ["apple", 4750],
-    ["1 tomato", 5000],
-    ["2 tomato", 6000],
-    ["3 tomato", 6500],
-    ["brussels", 7000],
-    ["radishes", 8000],
-    ["chives", 9000],
-    ["scallion", 10000],
-    ["parsley", 10500],
-    ["cilantro", 11000],
-    ["celery", 11500],
-    ["cucumber", 12000],
-    ["kale", 12500],
-    ["broccoli", 13000],
-    ["cherry tomato", 14000],
-    ["shallot", 15000],
-    ["onion", 16000],
-    ["potato", 16250],
-    ["squash", 16500],
-    ["carrot", 17000],
-    ["zucchini", 17500],
-    ["pepper", 18000],
-    ["mushroom", 19000],
-    ["cauliflower", 20000],
-    ["string bean", 20500],
-    ["choy", 21000],
-    ["salmon", 22000],
-    ["mignons", 22500],
-    ["beef", 23000],
-    ["pork", 24000],
-    ["chicken", 25000],
-    ["cheddar", 26000],
-    ["sour cream", 27000],
-    ["cream", 28000],
-    ["milk", 29000],
-    ["labneh", 30000],
-    ["tomato paste", 31000],
-    ["rigatoni", 31500],
-    ["peas", 32000],
-  ];
+  const orderSubstringWeights: [string, number][] = [];
+  for (let i = 0; i < orderSubstrings.length; i++) {
+    orderSubstringWeights.push([orderSubstrings[i], i]);
+  }
 
   recipes.forEach((recipe) =>
     recipe.ingredients.forEach((ingredient) => {
@@ -85,8 +28,8 @@ const writeGroceryList = (recipes: GoodfoodRecipe[]) => {
   let content = `## Grocery List\n`;
   allIngredients
     .map((ingredient: string): { ingredient: string; weight: number } => {
-      let weight = 100000;
-      const relevantSubstringsAndWeights = substringSortWeights.filter(
+      let weight = Number.MAX_VALUE;
+      const relevantSubstringsAndWeights = orderSubstringWeights.filter(
         (substringAndWeight) =>
           ingredient.toLowerCase().includes(substringAndWeight[0])
       );
@@ -114,9 +57,14 @@ const writeRecipes = (recipes: GoodfoodRecipe[]) => {
   return `${content}`;
 };
 
-const getMarkdownPageContent = (recipes: GoodfoodRecipe[], date: string) => {
+const getMarkdownPageContent = (
+  recipes: GoodfoodRecipe[],
+  date: string,
+  removeSubstrings: string[],
+  orderSubstrings: string[]
+) => {
   let content = `# Goodfood Recipes ${date}\n`;
-  content += writeGroceryList(recipes);
+  content += writeGroceryList(recipes, removeSubstrings, orderSubstrings);
   content += writeRecipes(recipes);
 
   return content;

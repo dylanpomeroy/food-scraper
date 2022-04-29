@@ -52,6 +52,8 @@ const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
   await Promise.all(
     urls.map(async (url) => {
       const response = await axios.get(url);
+
+      // eslint-disable-next-line require-jsdoc
       function notEmpty<TValue>(
         value: TValue | null | undefined
       ): value is TValue {
@@ -63,7 +65,7 @@ const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
       let name = $("h1").text();
       name = name.substring(0, name.length / 2);
 
-      let ingredients = $(".ingred span")
+      const ingredients = $(".ingred span")
         .toArray()
         .map((x) => {
           const ingredientText = ($(x)[0] as any).children[0].data;

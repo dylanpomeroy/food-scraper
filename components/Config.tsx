@@ -6,15 +6,32 @@ import axios from "axios";
 
 interface Props {
   pageRoot: any;
+  removeSubstrings: string[];
+  orderSubstrings: string[];
+  setRemoveSubstrings: (removeSubstrings: string[]) => void;
+  setOrderSubstrings: (orderSubstrings: string[]) => void;
 }
 
-const Config = ({ pageRoot }: Props) => {
+const Config = ({
+  pageRoot,
+  removeSubstrings,
+  setRemoveSubstrings,
+  orderSubstrings,
+  setOrderSubstrings,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [removeSubstringsText, setRemoveSubstringsText] = useState("");
-  const [orderSubstringsText, setOrderSubstringsText] = useState("");
+  const [removeSubstringsText, setRemoveSubstringsText] = useState(
+    removeSubstrings.join("\n")
+  );
+  const [orderSubstringsText, setOrderSubstringsText] = useState(
+    orderSubstrings.join("\n")
+  );
 
   const saveSettings = async () => {
+    setRemoveSubstrings(removeSubstringsText.split("\n"));
+    setOrderSubstrings(orderSubstringsText.split("\n"));
+
     const settingsObject: SettingsData = {
       removeSubstrings:
         removeSubstringsText?.split("\n").filter((value) => !!value) ?? [],
@@ -26,21 +43,9 @@ const Config = ({ pageRoot }: Props) => {
   };
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      const response = await axios.get<SettingsData>("/api/settings");
-
-      console.log(response);
-      if (response.data.removeSubstrings) {
-        setRemoveSubstringsText(response.data.removeSubstrings.join("\n"));
-      }
-
-      if (response.data.orderSubstrings) {
-        setOrderSubstringsText(response.data.orderSubstrings.join("\n"));
-      }
-    };
-
-    fetchSettings();
-  }, []);
+    setRemoveSubstringsText(removeSubstrings.join("\n"));
+    setOrderSubstringsText(orderSubstrings.join("\n"));
+  }, [removeSubstrings, orderSubstrings]);
 
   return (
     <span>

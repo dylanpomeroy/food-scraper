@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "../styles/Home.module.css";
 import axios from "axios";
 import recipePrinter from "../utils/goodfoodRecipePrinter";
-import { GoodfoodRecipeListItem } from "../utils/types";
+import { GoodfoodRecipeListItem, SettingsData } from "../utils/types";
 import Config from "../components/Config";
 
 const Home = () => {
@@ -14,11 +14,30 @@ const Home = () => {
   const [pickedRecipeLinks, setPickedRecipeLinks] = useState<string[]>([]);
   const [showingMarkdown, setShowingMarkdown] = useState(false);
 
+  const [removeSubstrings, setRemoveSubstrings] = useState([]);
+  const [orderSubstrings, setOrderSubstrings] = useState([]);
+
   const submitButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
   useEffect(() => {
     parseRecipesPage();
+  }, []);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const response = await axios.get<SettingsData>("/api/settings");
+
+      if (response.data.removeSubstrings) {
+        setRemoveSubstrings(response.data.removeSubstrings);
+      }
+
+      if (response.data.orderSubstrings) {
+        setOrderSubstrings(response.data.orderSubstrings);
+      }
+    };
+
+    fetchSettings();
   }, []);
 
   const submitUrls = async () => {
@@ -33,7 +52,9 @@ const Home = () => {
     }/${today.getDate()}/${today.getFullYear()}`;
     const newResponseMarkdown = recipePrinter.getMarkdownPageContent(
       recipeData.data,
-      dateString
+      dateString,
+      removeSubstrings,
+      orderSubstrings
     );
     setResponseMarkdown(newResponseMarkdown);
 
@@ -68,7 +89,13 @@ const Home = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Goodfood Scraper</h1>
 
-        <Config pageRoot={pageRootRef} />
+        <Config
+          pageRoot={pageRootRef}
+          removeSubstrings={removeSubstrings}
+          setRemoveSubstrings={setRemoveSubstrings}
+          orderSubstrings={orderSubstrings}
+          setOrderSubstrings={setOrderSubstrings}
+        />
 
         <p className={styles.pickedAmountLabel}>
           Picked <b>{pickedRecipeLinks.length}</b> recipes.
