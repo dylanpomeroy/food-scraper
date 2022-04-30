@@ -34,17 +34,17 @@ const getRecipesList = async (
     .toArray()
     .map((x: cheerio.TagElement) => x.attribs["href"]);
 
-  const meals: GoodfoodRecipeListItem[] = [];
+  const meals: { [key: string]: GoodfoodRecipeListItem } = {};
   for (let i = 0; i < mealTitles.length; i++) {
-    meals.push({
+    meals[mealTitles[i]] = {
       title: mealTitles[i],
       detail: mealDetails[i],
       image: mealImages[i],
       link: mealLinks[i],
-    });
+    };
   }
 
-  return meals;
+  return Object.values(meals);
 };
 
 const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
