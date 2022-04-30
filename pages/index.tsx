@@ -11,7 +11,9 @@ const Home = () => {
   const [recipeListData, setRecipeListData] = useState<
     GoodfoodRecipeListItem[]
   >([]);
-  const [pickedRecipeLinks, setPickedRecipeLinks] = useState<string[]>([]);
+  const [pickedRecipeLinks, setPickedRecipeLinks] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [showingMarkdown, setShowingMarkdown] = useState(false);
 
   const [removeSubstrings, setRemoveSubstrings] = useState([]);
@@ -43,7 +45,7 @@ const Home = () => {
   const submitUrls = async () => {
     setResponseMarkdown("");
     const recipeData = await axios.post("/api/recipes", {
-      recipeUrls: pickedRecipeLinks,
+      recipeUrls: Object.keys(pickedRecipeLinks),
     });
 
     const today = new Date();
@@ -98,7 +100,7 @@ const Home = () => {
         />
 
         <p className={styles.pickedAmountLabel}>
-          Picked <b>{pickedRecipeLinks.length}</b> recipes.
+          Picked <b>{Object.keys(pickedRecipeLinks).length}</b> recipes.
         </p>
         <div className={styles.recipeListContainer}>
           {recipeListData.map((recipeData, index) => (
@@ -116,31 +118,21 @@ const Home = () => {
                 </div>
                 <button
                   className={
-                    pickedRecipeLinks.includes(recipeData.link)
+                    recipeData.link in pickedRecipeLinks
                       ? styles.recipeListItemButtonPicked
                       : styles.recipeListItemButtonUnpicked
                   }
                   onClick={() => {
-                    const indexOfPickedLink = pickedRecipeLinks.indexOf(
-                      recipeData.link
-                    );
-                    if (indexOfPickedLink == -1) {
-                      setPickedRecipeLinks(
-                        pickedRecipeLinks.concat(recipeData.link)
-                      );
+                    if (!(recipeData.link in pickedRecipeLinks)) {
+                      pickedRecipeLinks[recipeData.link] = true;
+                      setPickedRecipeLinks({ ...pickedRecipeLinks });
                     } else {
-                      setPickedRecipeLinks(
-                        pickedRecipeLinks.splice(
-                          indexOfPickedLink,
-                          indexOfPickedLink
-                        )
-                      );
+                      delete pickedRecipeLinks[recipeData.link];
+                      setPickedRecipeLinks({ ...pickedRecipeLinks });
                     }
                   }}
                 >
-                  {pickedRecipeLinks.includes(recipeData.link)
-                    ? "Picked"
-                    : "Pick me"}
+                  {recipeData.link in pickedRecipeLinks ? "Picked" : "Pick me"}
                 </button>
               </div>
             </div>

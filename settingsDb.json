@@ -13,7 +13,8 @@
     "peanuts",
     "rice",
     "pine nut",
-    "ponzu"
+    "ponzu",
+    "ketchup"
   ],
   "orderSubstrings": [
     "dough",
@@ -50,6 +51,8 @@
     "cauliflower",
     "string bean",
     "choy",
+    "tortilla",
+    "pita",
     "salmon",
     "mignons",
     "beef",
@@ -59,6 +62,7 @@
     "sour cream",
     "cream",
     "milk",
+    "mozza",
     "labneh",
     "tomato paste",
     "rigatoni",
