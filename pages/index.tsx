@@ -5,6 +5,7 @@ import axios from "axios";
 import recipePrinter from "../utils/goodfoodRecipePrinter";
 import { GoodfoodRecipeListItem, SettingsData } from "../utils/types";
 import Config from "../components/Config";
+import { RecipeSelector } from "../components/RecipeSelector";
 
 const Home = () => {
   const [responseMarkdown, setResponseMarkdown] = useState("");
@@ -106,62 +107,26 @@ const Home = () => {
         <h1 className={styles.title}>Goodfood Scraper</h1>
 
         <Config
-          pageRoot={pageRootRef}
-          recipeSubstringsDenyList={recipeSubstringsDenyList}
-          setRecipeSubstringsDenyList={setRecipeSubstringsDenyList}
-          removeSubstrings={removeSubstrings}
-          setRemoveSubstrings={setRemoveSubstrings}
-          orderSubstrings={orderSubstrings}
-          setOrderSubstrings={setOrderSubstrings}
+          {...{
+            pageRoot: pageRootRef,
+            recipeSubstringsDenyList,
+            setRecipeSubstringsDenyList,
+            removeSubstrings,
+            setRemoveSubstrings,
+            orderSubstrings,
+            setOrderSubstrings,
+          }}
         />
 
-        <p className={styles.pickedAmountLabel}>
-          Picked <b>{Object.keys(pickedRecipeLinks).length}</b> recipes.
-        </p>
-        <div className={styles.recipeListContainer}>
-          {recipeListData.map((recipeData, index) => (
-            <div key={index} className={styles.recipeListItem}>
-              <a href={recipeData.link} target="_blank" rel="noreferrer">
-                <img
-                  src={recipeData.image}
-                  className={styles.recipeListItemImage}
-                />
-              </a>
-              <div className={styles.recipeListItemTitles}>
-                <div style={{}}>
-                  <h3 className={styles.marginSmall}>{recipeData.title}</h3>
-                  <h4 className={styles.marginSmall}>{recipeData.detail}</h4>
-                </div>
-                <button
-                  className={
-                    recipeData.link in pickedRecipeLinks
-                      ? styles.recipeListItemButtonPicked
-                      : styles.recipeListItemButtonUnpicked
-                  }
-                  onClick={() => {
-                    if (!(recipeData.link in pickedRecipeLinks)) {
-                      pickedRecipeLinks[recipeData.link] = true;
-                      setPickedRecipeLinks({ ...pickedRecipeLinks });
-                    } else {
-                      delete pickedRecipeLinks[recipeData.link];
-                      setPickedRecipeLinks({ ...pickedRecipeLinks });
-                    }
-                  }}
-                >
-                  {recipeData.link in pickedRecipeLinks ? "Picked" : "Pick me"}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button
-          ref={submitButtonRef}
-          className={styles.button}
-          onClick={() => submitUrls()}
-        >
-          Submit
-        </button>
+        <RecipeSelector
+          {...{
+            recipeListData,
+            pickedRecipeLinks,
+            setPickedRecipeLinks,
+            submitButtonRef,
+            submitUrls,
+          }}
+        />
 
         {responseMarkdown && <h3>Copied to clipboard!</h3>}
 

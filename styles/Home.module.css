@@ -122,6 +122,7 @@
 
 .pickedAmountLabel {
   font-size: 20px;
+  text-align: center;
 }
 
 .recipeListContainer {
@@ -174,4 +175,8 @@
 
 .marginSmall {
   margin: 8px;
+}
+
+.recipeSelectorContainer {
+  text-align: center;
 }
