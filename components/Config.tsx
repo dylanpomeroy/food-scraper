@@ -6,20 +6,27 @@ import axios from "axios";
 
 interface Props {
   pageRoot: any;
+  recipeSubstringsDenyList: string[];
   removeSubstrings: string[];
   orderSubstrings: string[];
+  setRecipeSubstringsDenyList: (recipeSubstringsDenyList: string[]) => void;
   setRemoveSubstrings: (removeSubstrings: string[]) => void;
   setOrderSubstrings: (orderSubstrings: string[]) => void;
 }
 
 const Config = ({
   pageRoot,
+  recipeSubstringsDenyList,
+  setRecipeSubstringsDenyList,
   removeSubstrings,
   setRemoveSubstrings,
   orderSubstrings,
   setOrderSubstrings,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [recipeSubstringsDenyListText, setRecipeSubstringsDenyListText] =
+    useState(recipeSubstringsDenyList.join("\n"));
 
   const [removeSubstringsText, setRemoveSubstringsText] = useState(
     removeSubstrings.join("\n")
@@ -29,10 +36,14 @@ const Config = ({
   );
 
   const saveSettings = async () => {
+    setRecipeSubstringsDenyList(recipeSubstringsDenyListText.split("\n"));
     setRemoveSubstrings(removeSubstringsText.split("\n"));
     setOrderSubstrings(orderSubstringsText.split("\n"));
 
     const settingsObject: SettingsData = {
+      recipeSubstringsDenyList:
+        recipeSubstringsDenyListText?.split("\n").filter((value) => !!value) ??
+        [],
       removeSubstrings:
         removeSubstringsText?.split("\n").filter((value) => !!value) ?? [],
       orderSubstrings:
@@ -43,14 +54,33 @@ const Config = ({
   };
 
   useEffect(() => {
+    setRecipeSubstringsDenyListText(recipeSubstringsDenyList.join("\n"));
     setRemoveSubstringsText(removeSubstrings.join("\n"));
     setOrderSubstringsText(orderSubstrings.join("\n"));
-  }, [removeSubstrings, orderSubstrings]);
+  }, [recipeSubstringsDenyList, removeSubstrings, orderSubstrings]);
 
   return (
     <span>
       <Modal isOpen={isModalOpen} appElement={pageRoot.current}>
         <h2>Settings</h2>
+
+        <h3>Recipe substrings deny list</h3>
+        <p>
+          Enter substring values for recipes you do not want to see in the
+          recipes list. For example, if you cant eat steak or fish, enter the
+          values &quot;steak&quot;, &quot;salmon&quot; and &quot;cod&quot; on
+          separate lines.
+        </p>
+        <textarea
+          value={recipeSubstringsDenyListText}
+          onChange={(event) =>
+            setRecipeSubstringsDenyListText(event.target.value)
+          }
+          style={{
+            display: "block",
+            height: "200px",
+          }}
+        />
 
         <h3>Remove substrings</h3>
         <p>

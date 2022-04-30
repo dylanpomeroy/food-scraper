@@ -9,7 +9,11 @@ const init = async () => {
   if (initialized) return;
 
   await db.read();
-  db.data ||= { removeSubstrings: [], orderSubstrings: [] };
+  db.data ||= {
+    recipeSubstringsDenyList: [],
+    removeSubstrings: [],
+    orderSubstrings: [],
+  };
 };
 
 export const saveSettings = async (settings: SettingsData) => {

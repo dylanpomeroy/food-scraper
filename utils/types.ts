@@ -21,6 +21,7 @@ export interface GoodfoodRecipeListItem {
 }
 
 export interface SettingsData {
+  recipeSubstringsDenyList: string[];
   removeSubstrings: string[];
   orderSubstrings: string[];
 }

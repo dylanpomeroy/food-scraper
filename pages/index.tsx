@@ -16,19 +16,29 @@ const Home = () => {
   }>({});
   const [showingMarkdown, setShowingMarkdown] = useState(false);
 
+  const [recipeSubstringsDenyList, setRecipeSubstringsDenyList] = useState([]);
   const [removeSubstrings, setRemoveSubstrings] = useState([]);
   const [orderSubstrings, setOrderSubstrings] = useState([]);
 
   const submitButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
+  const firstRun = useRef(true);
   useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
     parseRecipesPage();
-  }, []);
+  }, [recipeSubstringsDenyList]);
 
   useEffect(() => {
     const fetchSettings = async () => {
       const response = await axios.get<SettingsData>("/api/settings");
+
+      if (response.data.recipeSubstringsDenyList) {
+        setRecipeSubstringsDenyList(response.data.recipeSubstringsDenyList);
+      }
 
       if (response.data.removeSubstrings) {
         setRemoveSubstrings(response.data.removeSubstrings);
@@ -65,7 +75,11 @@ const Home = () => {
   };
 
   const parseRecipesPage = async () => {
-    const recipeListData: any = await axios.get("/api/recipes");
+    const recipeListData: any = await axios.get("/api/recipes", {
+      params: {
+        recipeSubstringsDenyList: recipeSubstringsDenyList.join(","),
+      },
+    });
     setRecipeListData(recipeListData.data);
   };
 
@@ -93,6 +107,8 @@ const Home = () => {
 
         <Config
           pageRoot={pageRootRef}
+          recipeSubstringsDenyList={recipeSubstringsDenyList}
+          setRecipeSubstringsDenyList={setRecipeSubstringsDenyList}
           removeSubstrings={removeSubstrings}
           setRemoveSubstrings={setRemoveSubstrings}
           orderSubstrings={orderSubstrings}

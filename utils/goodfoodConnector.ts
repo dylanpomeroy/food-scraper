@@ -3,7 +3,8 @@ import cheerio from "cheerio";
 import { GoodfoodRecipe, GoodfoodRecipeListItem, Ingredient } from "./types";
 
 const getRecipesList = async (
-  url: string
+  url: string,
+  recipeSubstringsDenyList: string[]
 ): Promise<GoodfoodRecipeListItem[]> => {
   const listPageResponse = await axios.get(url);
 
@@ -13,7 +14,7 @@ const getRecipesList = async (
     ".below-classic_meals .col-sm-6 .recipeofweek-box .recipeofweek-title a"
   )
     .toArray()
-    // @ts-ignore
+    // @ts-ignore cheerio broken typing
     .map((x) => x.children[0].data);
   const mealTitles = [];
   const mealDetails = [];
@@ -44,7 +45,31 @@ const getRecipesList = async (
     };
   }
 
-  return Object.values(meals);
+  const mealsNotInDenyList = {};
+  for (const mealKey of Object.keys(meals)) {
+    let excludeMeal = false;
+    for (const removeSubstring of recipeSubstringsDenyList) {
+      if (
+        meals[mealKey].title
+          .toLowerCase()
+          .includes(removeSubstring.toLowerCase()) ||
+        meals[mealKey].detail
+          .toLowerCase()
+          .includes(removeSubstring.toLowerCase())
+      ) {
+        excludeMeal = true;
+        break;
+      }
+    }
+
+    if (excludeMeal) {
+      continue;
+    }
+
+    mealsNotInDenyList[mealKey] = meals[mealKey];
+  }
+
+  return Object.values(mealsNotInDenyList);
 };
 
 const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {

@@ -1,4 +1,7 @@
 {
+  "recipeSubstringsDenyList": [
+    "carb-wise"
+  ],
   "removeSubstrings": [
     "spice blend",
     "spices",

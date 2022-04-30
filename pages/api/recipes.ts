@@ -3,8 +3,15 @@ import goodfoodConnector from "../../utils/goodfoodConnector";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method == "GET") {
+    const recipeSubstringsDenyList = (
+      req.query.recipeSubstringsDenyList as string
+    )
+      .split(",")
+      .filter((substring) => !!substring);
+
     const result = await goodfoodConnector.getRecipesList(
-      "https://www.makegoodfood.ca/en/recipes"
+      "https://www.makegoodfood.ca/en/recipes",
+      recipeSubstringsDenyList
     );
     res.send(result);
   } else if (req.method == "POST") {
