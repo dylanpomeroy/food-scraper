@@ -1,6 +1,38 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
+import { createUseStyles } from "react-jss";
 import { GoodfoodRecipeListItem } from "../utils/types";
+
+const useStyles = createUseStyles({
+  container: {
+    width: "400px",
+    height: "400px",
+    display: "inline-block",
+    margin: "8px",
+  },
+  image: {
+    width: "100%",
+  },
+  titleContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  marginSmall: {
+    margin: "8px",
+  },
+  buttonUnpicked: {
+    background: "white",
+    width: "80px",
+    height: "80px",
+    margin: "8px",
+  },
+  buttonPicked: {
+    background: "lightgreen",
+    width: "80px",
+    height: "80px",
+    margin: "8px",
+  },
+});
 
 interface Props {
   recipeData: GoodfoodRecipeListItem;
@@ -13,12 +45,14 @@ export const RecipeCard = ({
   pickRecipePressed,
   pickedRecipeLinks,
 }: Props) => {
+  const styles = useStyles();
+
   return (
-    <div className={styles.recipeListItem}>
+    <div className={styles.container}>
       <a href={recipeData.link} target="_blank" rel="noreferrer">
-        <img src={recipeData.image} className={styles.recipeListItemImage} />
+        <img src={recipeData.image} className={styles.image} />
       </a>
-      <div className={styles.recipeListItemTitles}>
+      <div className={styles.titleContainer}>
         <div style={{}}>
           <h3 className={styles.marginSmall}>{recipeData.title}</h3>
           <h4 className={styles.marginSmall}>{recipeData.detail}</h4>
@@ -26,8 +60,8 @@ export const RecipeCard = ({
         <button
           className={
             recipeData.link in pickedRecipeLinks
-              ? styles.recipeListItemButtonPicked
-              : styles.recipeListItemButtonUnpicked
+              ? styles.buttonPicked
+              : styles.buttonUnpicked
           }
           onClick={() => pickRecipePressed(recipeData.link)}
         >

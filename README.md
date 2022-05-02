@@ -2,8 +2,8 @@
 
 ## Description
 
-A NextJS app that parses the goodfood recipe page urls provided and generates
-a markdown shopping list and recipe details
+A NextJS app that parses the goodfood recipes selected and generates
+a markdown shopping list including recipe details
 
 ## Run development
 

@@ -3,6 +3,22 @@ import GearIcon from "../public/settings-gear.svg";
 import Modal from "react-modal";
 import { SettingsData } from "../utils/types";
 import axios from "axios";
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles({
+  configTextArea: {
+    display: "block",
+    height: "200px",
+  },
+  openConfigButton: {
+    width: "80px",
+    position: "absolute",
+    right: "16px",
+    top: "24px",
+    background: "white",
+    border: "0px",
+  },
+});
 
 interface Props {
   pageRoot: any;
@@ -23,6 +39,8 @@ const Config = ({
   orderSubstrings,
   setOrderSubstrings,
 }: Props) => {
+  const styles = useStyles();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [recipeSubstringsDenyListText, setRecipeSubstringsDenyListText] =
@@ -72,14 +90,11 @@ const Config = ({
           separate lines.
         </p>
         <textarea
+          className={styles.configTextArea}
           value={recipeSubstringsDenyListText}
           onChange={(event) =>
             setRecipeSubstringsDenyListText(event.target.value)
           }
-          style={{
-            display: "block",
-            height: "200px",
-          }}
         />
 
         <h3>Remove substrings</h3>
@@ -90,12 +105,9 @@ const Config = ({
         </p>
         <p>Enter one value on each line.</p>
         <textarea
+          className={styles.configTextArea}
           value={removeSubstringsText}
           onChange={(event) => setRemoveSubstringsText(event.target.value)}
-          style={{
-            display: "block",
-            height: "200px",
-          }}
         />
 
         <h3>Order substrings</h3>
@@ -118,12 +130,9 @@ const Config = ({
         </ul>
         <p>Enter one value on each line.</p>
         <textarea
+          className={styles.configTextArea}
           value={orderSubstringsText}
           onChange={(event) => setOrderSubstringsText(event.target.value)}
-          style={{
-            display: "block",
-            height: "200px",
-          }}
         />
 
         <button
@@ -136,14 +145,7 @@ const Config = ({
         </button>
       </Modal>
       <button
-        style={{
-          width: "80px",
-          position: "absolute",
-          right: "16px",
-          top: "24px",
-          background: "white",
-          border: "0px",
-        }}
+        className={styles.openConfigButton}
         onClick={() => setIsModalOpen(true)}
       >
         <GearIcon />

@@ -1,13 +1,47 @@
 import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
-import styles from "../styles/Home.module.css";
 import axios from "axios";
 import recipePrinter from "../utils/goodfoodRecipePrinter";
 import { GoodfoodRecipeListItem, SettingsData } from "../utils/types";
 import Config from "../components/Config";
 import { RecipeSelector } from "../components/RecipeSelector";
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles({
+  container: {
+    minHeight: "100vh",
+    padding: "0 0.4rem",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  main: {
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    margin: "0",
+    lineHeight: "1.15",
+    fontSize: "4rem",
+  },
+  button: {
+    height: "50px",
+    width: "200px",
+    fontSize: "20px",
+    margin: "20px",
+  },
+  markdownTextArea: {
+    border: "1px solid black",
+  },
+});
 
 const Home = () => {
+  const style = useStyles();
+
   const [responseMarkdown, setResponseMarkdown] = useState("");
   const [recipeListData, setRecipeListData] = useState<
     GoodfoodRecipeListItem[]
@@ -97,14 +131,14 @@ const Home = () => {
   const pageRootRef = useRef(null);
 
   return (
-    <div className={styles.container} ref={pageRootRef}>
+    <div className={style.container} ref={pageRootRef}>
       <Head>
-        <title>Goodfood Scraper</title>
+        <title className={style.title}>Goodfood Scraper</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Goodfood Scraper</h1>
+      <main className={style.main}>
+        <h1>Goodfood Scraper</h1>
 
         <Config
           {...{
@@ -132,7 +166,7 @@ const Home = () => {
 
         {responseMarkdown && (
           <button
-            className={styles.button}
+            className={style.button}
             onClick={() => showMarkdownPressed()}
           >
             Show markdown
@@ -140,7 +174,7 @@ const Home = () => {
         )}
 
         {showingMarkdown && (
-          <div ref={markdownTextAreaRef} style={{ border: "1px solid black" }}>
+          <div ref={markdownTextAreaRef} className={style.markdownTextArea}>
             <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
           </div>
         )}

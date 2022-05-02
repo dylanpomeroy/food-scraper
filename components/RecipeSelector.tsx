@@ -1,7 +1,32 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
+import { createUseStyles } from "react-jss";
 import { GoodfoodRecipeListItem } from "../utils/types";
 import { RecipeCard } from "./RecipeCard";
+
+const useStyles = createUseStyles({
+  container: {
+    textAlign: "center",
+  },
+  pickedAmountLabel: {
+    fontSize: "20px",
+    textAlign: "center",
+  },
+  listContainer: {
+    border: "1px solid black",
+    maxHeight: "70vh",
+    width: "100%",
+    overflow: "scroll",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  button: {
+    height: "50px",
+    width: "200px",
+    fontSize: "20px",
+    margin: "20px",
+  },
+});
 
 interface Props {
   recipeListData: GoodfoodRecipeListItem[];
@@ -18,6 +43,8 @@ export const RecipeSelector = ({
   submitButtonRef,
   submitUrls,
 }: Props) => {
+  const style = useStyles();
+
   const selectedRecipeCount = Object.keys(pickedRecipeLinks).length;
 
   const pickRecipePressed = (recipeLink: string) => {
@@ -31,11 +58,11 @@ export const RecipeSelector = ({
   };
 
   return (
-    <div className={styles.recipeSelectorContainer}>
-      <p className={styles.pickedAmountLabel}>
+    <div className={style.container}>
+      <p className={style.pickedAmountLabel}>
         Picked <b>{selectedRecipeCount}</b> recipes.
       </p>
-      <div className={styles.recipeListContainer}>
+      <div className={style.listContainer}>
         {recipeListData.map((recipeData, index) => (
           <RecipeCard
             recipeData={recipeData}
@@ -48,7 +75,7 @@ export const RecipeSelector = ({
 
       <button
         ref={submitButtonRef}
-        className={styles.button}
+        className={style.button}
         onClick={() => submitUrls()}
       >
         Submit
