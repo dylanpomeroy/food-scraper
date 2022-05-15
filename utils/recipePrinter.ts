@@ -1,7 +1,7 @@
-import { GoodfoodRecipe } from "./types";
+import { Recipe } from "./types";
 
 const writeGroceryList = (
-  recipes: GoodfoodRecipe[],
+  recipes: Recipe[],
   removeSubstrings: string[],
   orderSubstrings: string[]
 ) => {
@@ -45,7 +45,7 @@ const writeGroceryList = (
   return `${content}\n`;
 };
 
-const writeRecipes = (recipes: GoodfoodRecipe[]) => {
+const writeRecipes = (recipes: Recipe[]) => {
   let content = `## Recipes\n`;
   recipes.forEach((recipe) => {
     content += `### [${recipe.name}](${recipe.url})\n`;
@@ -58,12 +58,12 @@ const writeRecipes = (recipes: GoodfoodRecipe[]) => {
 };
 
 const getMarkdownPageContent = (
-  recipes: GoodfoodRecipe[],
+  recipes: Recipe[],
   date: string,
   removeSubstrings: string[],
   orderSubstrings: string[]
 ) => {
-  let content = `# Goodfood Recipes ${date}\n`;
+  let content = `# Recipes ${date}\n`;
   content += writeGroceryList(recipes, removeSubstrings, orderSubstrings);
   content += writeRecipes(recipes);
 

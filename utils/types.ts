@@ -1,4 +1,4 @@
-export interface GoodfoodRecipe {
+export interface Recipe {
   name: string;
   url: string;
   ingredients: Ingredient[];
@@ -13,7 +13,7 @@ export interface Ingredient {
   };
 }
 
-export interface GoodfoodRecipeListItem {
+export interface RecipeListItem {
   title: string;
   detail: string;
   image: string;

@@ -1,8 +1,8 @@
 import Head from "next/head";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import recipePrinter from "../utils/goodfoodRecipePrinter";
-import { GoodfoodRecipeListItem, SettingsData } from "../utils/types";
+import recipePrinter from "../utils/recipePrinter";
+import { RecipeListItem, SettingsData } from "../utils/types";
 import Config from "../components/Config";
 import { RecipeSelector } from "../components/RecipeSelector";
 import { createUseStyles } from "react-jss";
@@ -43,9 +43,7 @@ const Home = () => {
   const style = useStyles();
 
   const [responseMarkdown, setResponseMarkdown] = useState("");
-  const [recipeListData, setRecipeListData] = useState<
-    GoodfoodRecipeListItem[]
-  >([]);
+  const [recipeListData, setRecipeListData] = useState<RecipeListItem[]>([]);
   const [pickedRecipeLinks, setPickedRecipeLinks] = useState<{
     [key: string]: boolean;
   }>({});
@@ -133,12 +131,12 @@ const Home = () => {
   return (
     <div className={style.container} ref={pageRootRef}>
       <Head>
-        <title className={style.title}>Goodfood Scraper</title>
+        <title className={style.title}>Food Scraper</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={style.main}>
-        <h1>Goodfood Scraper</h1>
+        <h1>Food Scraper</h1>
 
         <Config
           {...{

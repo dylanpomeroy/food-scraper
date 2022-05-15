@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { GoodfoodRecipeListItem } from "../utils/types";
+import { RecipeListItem } from "../utils/types";
 import { RecipeCard } from "./RecipeCard";
 
 const useStyles = createUseStyles({
@@ -29,7 +29,7 @@ const useStyles = createUseStyles({
 });
 
 interface Props {
-  recipeListData: GoodfoodRecipeListItem[];
+  recipeListData: RecipeListItem[];
   pickedRecipeLinks: { [key: string]: boolean };
   setPickedRecipeLinks: (pickedRecipeLinks: { [key: string]: boolean }) => void;
   submitButtonRef: React.MutableRefObject<any>;

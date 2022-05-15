@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { GoodfoodRecipeListItem } from "../utils/types";
+import { RecipeListItem } from "../utils/types";
 
 const useStyles = createUseStyles({
   container: {
@@ -35,7 +35,7 @@ const useStyles = createUseStyles({
 });
 
 interface Props {
-  recipeData: GoodfoodRecipeListItem;
+  recipeData: RecipeListItem;
   pickRecipePressed: (recipeLink: string) => void;
   pickedRecipeLinks: { [key: string]: boolean };
 }

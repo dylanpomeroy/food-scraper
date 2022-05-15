@@ -1,11 +1,11 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { GoodfoodRecipe, GoodfoodRecipeListItem, Ingredient } from "./types";
+import { Recipe, RecipeListItem, Ingredient } from "./types";
 
 const getRecipesList = async (
   url: string,
   recipeSubstringsDenyList: string[]
-): Promise<GoodfoodRecipeListItem[]> => {
+): Promise<RecipeListItem[]> => {
   const listPageResponse = await axios.get(url);
 
   const $ = cheerio.load(listPageResponse.data);
@@ -35,7 +35,7 @@ const getRecipesList = async (
     .toArray()
     .map((x: cheerio.TagElement) => x.attribs["href"]);
 
-  const meals: { [key: string]: GoodfoodRecipeListItem } = {};
+  const meals: { [key: string]: RecipeListItem } = {};
   for (let i = 0; i < mealTitles.length; i++) {
     meals[mealTitles[i]] = {
       title: mealTitles[i],
@@ -72,8 +72,8 @@ const getRecipesList = async (
   return Object.values(mealsNotInDenyList);
 };
 
-const getRecipes = async (urls: string[]): Promise<GoodfoodRecipe[]> => {
-  const recipes: GoodfoodRecipe[] = [];
+const getRecipes = async (urls: string[]): Promise<Recipe[]> => {
+  const recipes: Recipe[] = [];
   await Promise.all(
     urls.map(async (url) => {
       const response = await axios.get(url);

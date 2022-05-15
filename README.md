@@ -1,9 +1,8 @@
-# Goodfood Scraper
+# Food Scraper
 
 ## Description
 
-A NextJS app that parses the goodfood recipes selected and generates
-a markdown shopping list including recipe details
+A NextJS app that parses online food recipes selected and generates a markdown shopping list and recipe details
 
 ## Run development
 
@@ -13,8 +12,6 @@ yarn dev
 ```
 
 App will be hosted on http://localhost:3000
-
-use VSCode debug task `Debug` to setup breakpoint debugging
 
 ## Run production
 
@@ -50,7 +47,7 @@ wget -qO- https://getpm2.com/install.sh | bash
 Install packages
 
 ```
-cd goodfood-scraper
+cd food-scraper
 yarn install
 ```
 
@@ -63,8 +60,8 @@ yarn build
 Run app via pm2
 
 ```
-pm2 start yarn --name "goodfood-scraper" --interpreter bash -- start
-pm2 show goodfood-scraper
+pm2 start yarn --name "food-scraper" --interpreter bash -- start
+pm2 show food-scraper
 ```
 
 Setup pm2 to run app on startup
@@ -91,5 +88,5 @@ git fetch
 git pull
 yarn install
 yarn build
-pm2 restart goodfood-scraper
+pm2 restart food-scraper
 ```
