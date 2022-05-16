@@ -8,7 +8,7 @@ import { RecipeSelector } from "../components/RecipeSelector";
 import { createUseStyles } from "react-jss";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Container } from "../components/Container";
+import { GroceryListContainer } from "../components/GroceryListContainer";
 
 const useStyles = createUseStyles({
   container: {
@@ -57,9 +57,14 @@ const Home = () => {
   const [orderSubstrings, setOrderSubstrings] = useState([]);
 
   const submitButtonRef = useRef(null);
+  const confirmListButtonRef = useRef(null);
+  const showMarkdownButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
-  const [groceryListItems, setGroceryListItems] = useState([]);
+  const [recipeData, setRecipeData] = useState<any>();
+  const [groceryListItems, setGroceryListItems] = useState<
+    { id: number; text: string }[]
+  >([]);
 
   const firstRun = useRef(true);
   useEffect(() => {
@@ -74,17 +79,12 @@ const Home = () => {
     const fetchSettings = async () => {
       const response = await axios.get<SettingsData>("/api/settings");
 
-      if (response.data.recipeSubstringsDenyList) {
+      if (response.data.recipeSubstringsDenyList)
         setRecipeSubstringsDenyList(response.data.recipeSubstringsDenyList);
-      }
-
-      if (response.data.removeSubstrings) {
+      if (response.data.removeSubstrings)
         setRemoveSubstrings(response.data.removeSubstrings);
-      }
-
-      if (response.data.orderSubstrings) {
+      if (response.data.orderSubstrings)
         setOrderSubstrings(response.data.orderSubstrings);
-      }
     };
 
     fetchSettings();
@@ -99,6 +99,8 @@ const Home = () => {
       })),
     });
 
+    setRecipeData(recipeData);
+
     const groceryListItems = recipePrinter.getGroceryList(
       recipeData.data,
       removeSubstrings,
@@ -110,21 +112,6 @@ const Home = () => {
         text: groceryListItem,
       }))
     );
-
-    const today = new Date();
-    const dateString = `${
-      today.getMonth() + 1
-    }/${today.getDate()}/${today.getFullYear()}`;
-    const newResponseMarkdown = recipePrinter.getMarkdownPageContent(
-      recipeData.data,
-      dateString,
-      removeSubstrings,
-      orderSubstrings
-    );
-    setResponseMarkdown(newResponseMarkdown);
-
-    submitButtonRef.current.scrollIntoView();
-    navigator.clipboard.writeText(newResponseMarkdown);
   };
 
   const parseRecipesPage = async () => {
@@ -142,14 +129,40 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (responseMarkdown) {
+      showMarkdownButtonRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [responseMarkdown]);
+
+  useEffect(() => {
     if (showingMarkdown) {
-      markdownTextAreaRef.current.scrollIntoView();
+      markdownTextAreaRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [showingMarkdown]);
 
+  useEffect(() => {
+    if (recipeData) {
+      confirmListButtonRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [recipeData]);
+
   const pageRootRef = useRef(null);
 
-  // const sampleCardsData = ["3 tomatoes", "garlic", "2 chicken breasts"];
+  const confirmGroceryListItems = () => {
+    const today = new Date();
+    const dateString = `${
+      today.getMonth() + 1
+    }/${today.getDate()}/${today.getFullYear()}`;
+    const newResponseMarkdown = recipePrinter.getMarkdownPageContent(
+      recipeData.data,
+      groceryListItems.map((item) => item.text),
+      dateString
+    );
+    setResponseMarkdown(newResponseMarkdown);
+
+    submitButtonRef.current.scrollIntoView();
+    navigator.clipboard.writeText(newResponseMarkdown);
+  };
 
   return (
     <div className={style.container} ref={pageRootRef}>
@@ -160,17 +173,6 @@ const Home = () => {
 
       <main className={style.main}>
         <h1>Food Scraper</h1>
-        <div>
-          <h1>Test area</h1>
-          <DndProvider backend={HTML5Backend}>
-            <Container
-              cards={groceryListItems}
-              setCards={setGroceryListItems}
-            />
-          </DndProvider>
-
-          <h1>End test area</h1>
-        </div>
         <Config
           {...{
             pageRoot: pageRootRef,
@@ -193,10 +195,21 @@ const Home = () => {
           }}
         />
 
-        {responseMarkdown && <h3>Copied to clipboard!</h3>}
+        {groceryListItems.length > 0 && (
+          <DndProvider backend={HTML5Backend}>
+            <GroceryListContainer
+              cards={groceryListItems}
+              setCards={setGroceryListItems}
+              confirmList={confirmGroceryListItems}
+              confirmButtonRef={confirmListButtonRef}
+            />
+          </DndProvider>
+        )}
 
+        {responseMarkdown && <h3>Copied to clipboard!</h3>}
         {responseMarkdown && (
           <button
+            ref={showMarkdownButtonRef}
             className={style.button}
             onClick={() => showMarkdownPressed()}
           >

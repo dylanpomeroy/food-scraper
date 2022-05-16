@@ -19,6 +19,8 @@ export interface CardProps {
   text: string;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
+  deleteItem: (id: number) => void;
+  setItemText: (id: number, newText: string) => void;
 }
 
 interface DragItem {
@@ -27,7 +29,14 @@ interface DragItem {
   type: string;
 }
 
-export const Card: FC<CardProps> = ({ id, text, index, moveCard }) => {
+export const Card: FC<CardProps> = ({
+  id,
+  text,
+  index,
+  moveCard,
+  deleteItem,
+  setItemText,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<
     DragItem,
@@ -104,7 +113,14 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard }) => {
   drag(drop(ref));
   return (
     <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
-      {text}
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setItemText(id, e.target.value)}
+      />
+      <button style={{ float: "right" }} onClick={() => deleteItem(id)}>
+        X
+      </button>
     </div>
   );
 };

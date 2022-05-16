@@ -44,19 +44,9 @@ export const getGroceryList = (
   return sortedIngredients;
 };
 
-const writeGroceryList = (
-  recipes: Recipe[],
-  removeSubstrings: string[],
-  orderSubstrings: string[]
-) => {
-  const sortedIngredients = getGroceryList(
-    recipes,
-    removeSubstrings,
-    orderSubstrings
-  );
-
+const writeGroceryList = (groceryListItems: string[]) => {
   let content = `## Grocery List\n`;
-  sortedIngredients.forEach(
+  groceryListItems.forEach(
     (ingredient) => (content += `- [ ] ${ingredient}\n`)
   );
 
@@ -77,12 +67,11 @@ const writeRecipes = (recipes: Recipe[]) => {
 
 const getMarkdownPageContent = (
   recipes: Recipe[],
-  date: string,
-  removeSubstrings: string[],
-  orderSubstrings: string[]
+  groceryListItems: string[],
+  date: string
 ) => {
   let content = `# Recipes ${date}\n`;
-  content += writeGroceryList(recipes, removeSubstrings, orderSubstrings);
+  content += writeGroceryList(groceryListItems);
   content += writeRecipes(recipes);
 
   return content;
