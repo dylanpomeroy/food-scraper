@@ -1,6 +1,6 @@
 import { Recipe } from "./types";
 
-const writeGroceryList = (
+export const getGroceryList = (
   recipes: Recipe[],
   removeSubstrings: string[],
   orderSubstrings: string[]
@@ -25,8 +25,7 @@ const writeGroceryList = (
     })
   );
 
-  let content = `## Grocery List\n`;
-  allIngredients
+  const sortedIngredients = allIngredients
     .map((ingredient: string): { ingredient: string; weight: number } => {
       let weight = Number.MAX_VALUE;
       const relevantSubstringsAndWeights = orderSubstringWeights.filter(
@@ -40,7 +39,26 @@ const writeGroceryList = (
       return { ingredient, weight };
     })
     .sort((a, b) => a.weight - b.weight)
-    .forEach((ingredient) => (content += `- [ ] ${ingredient.ingredient}\n`));
+    .map((ingredientInfo) => ingredientInfo.ingredient);
+
+  return sortedIngredients;
+};
+
+const writeGroceryList = (
+  recipes: Recipe[],
+  removeSubstrings: string[],
+  orderSubstrings: string[]
+) => {
+  const sortedIngredients = getGroceryList(
+    recipes,
+    removeSubstrings,
+    orderSubstrings
+  );
+
+  let content = `## Grocery List\n`;
+  sortedIngredients.forEach(
+    (ingredient) => (content += `- [ ] ${ingredient}\n`)
+  );
 
   return `${content}\n`;
 };
@@ -72,4 +90,5 @@ const getMarkdownPageContent = (
 
 export default {
   getMarkdownPageContent,
+  getGroceryList,
 };

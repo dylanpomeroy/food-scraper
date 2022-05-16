@@ -6,6 +6,9 @@ import { RecipeListItem, SettingsData } from "../utils/types";
 import Config from "../components/Config";
 import { RecipeSelector } from "../components/RecipeSelector";
 import { createUseStyles } from "react-jss";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { Container } from "../components/Container";
 
 const useStyles = createUseStyles({
   container: {
@@ -56,6 +59,8 @@ const Home = () => {
   const submitButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
+  const [groceryListItems, setGroceryListItems] = useState([]);
+
   const firstRun = useRef(true);
   useEffect(() => {
     if (firstRun.current) {
@@ -93,6 +98,18 @@ const Home = () => {
         url: recipeLink,
       })),
     });
+
+    const groceryListItems = recipePrinter.getGroceryList(
+      recipeData.data,
+      removeSubstrings,
+      orderSubstrings
+    );
+    setGroceryListItems(
+      groceryListItems.map((groceryListItem, index) => ({
+        id: index,
+        text: groceryListItem,
+      }))
+    );
 
     const today = new Date();
     const dateString = `${
@@ -132,6 +149,8 @@ const Home = () => {
 
   const pageRootRef = useRef(null);
 
+  // const sampleCardsData = ["3 tomatoes", "garlic", "2 chicken breasts"];
+
   return (
     <div className={style.container} ref={pageRootRef}>
       <Head>
@@ -141,7 +160,17 @@ const Home = () => {
 
       <main className={style.main}>
         <h1>Food Scraper</h1>
+        <div>
+          <h1>Test area</h1>
+          <DndProvider backend={HTML5Backend}>
+            <Container
+              cards={groceryListItems}
+              setCards={setGroceryListItems}
+            />
+          </DndProvider>
 
+          <h1>End test area</h1>
+        </div>
         <Config
           {...{
             pageRoot: pageRootRef,
