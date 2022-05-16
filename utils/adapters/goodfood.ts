@@ -1,7 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { Recipe, RecipeListItem, Ingredient } from "./types";
-import { RecipeSourceConnector } from "./webRecipeConnector";
+import { Recipe, RecipeListItem, Ingredient } from "../types";
+import { RecipeSourceConnector } from "../webRecipeConnector";
 
 const recipeListPage = "https://www.makegoodfood.ca/en/recipes";
 

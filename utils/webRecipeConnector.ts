@@ -1,5 +1,5 @@
 import { Recipe, RecipeListItem } from "./types";
-import GoodfoodConnector from "./goodfoodConnector";
+import GoodfoodConnector from "./adapters/goodfood";
 
 export interface RecipeSourceConnector {
   getRecipesList: (
@@ -34,11 +34,13 @@ export const getRecipesList = async (
 };
 
 export const getRecipes = async (
-  urls: { source: string; url: string }[]
-): Promise<Recipe[]> => {
-  const recipes: Recipe[] = [];
-
-  await Promise.all();
-
-  return recipes;
-};
+  urlInfos: { source: string; url: string }[]
+): Promise<Recipe[]> =>
+  await Promise.all(
+    urlInfos
+      .filter((urlInfo) => urlInfo.source in recipeSources && urlInfo.url)
+      .map(
+        async (urlInfo) =>
+          await recipeSources[urlInfo.source].getRecipe(urlInfo.url)
+      )
+  );

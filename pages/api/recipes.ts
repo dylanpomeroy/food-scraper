@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import goodfoodConnector from "../../utils/goodfoodConnector";
+import { getRecipes, getRecipesList } from "../../utils/webRecipeConnector";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method == "GET") {
@@ -9,17 +9,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .split(",")
       .filter((substring) => !!substring);
 
-    const result = await goodfoodConnector.getRecipesList(
-      "https://www.makegoodfood.ca/en/recipes",
+    const recipeSources = (req.query.recipeSources as string).split(",");
+
+    const result = await getRecipesList(
+      recipeSources,
       recipeSubstringsDenyList
     );
     res.send(result);
   } else if (req.method == "POST") {
     const input = req.body as {
-      recipeUrls: string[];
+      urlInfo: { source: string; url: string }[];
     };
 
-    const result = await goodfoodConnector.getRecipes(input.recipeUrls);
+    const result = await getRecipes(input.urlInfo);
     res.send(result);
   } else {
     return res.send(404);

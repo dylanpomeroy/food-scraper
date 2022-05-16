@@ -88,7 +88,10 @@ const Home = () => {
   const submitUrls = async () => {
     setResponseMarkdown("");
     const recipeData = await axios.post("/api/recipes", {
-      recipeUrls: Object.keys(pickedRecipeLinks),
+      urlInfo: Object.keys(pickedRecipeLinks).map((recipeLink) => ({
+        source: "goodfood",
+        url: recipeLink,
+      })),
     });
 
     const today = new Date();
@@ -110,10 +113,11 @@ const Home = () => {
   const parseRecipesPage = async () => {
     const recipeListData: any = await axios.get("/api/recipes", {
       params: {
+        recipeSources: "goodfood",
         recipeSubstringsDenyList: recipeSubstringsDenyList.join(","),
       },
     });
-    setRecipeListData(recipeListData.data);
+    setRecipeListData(recipeListData.data.goodfood);
   };
 
   const showMarkdownPressed = async () => {
