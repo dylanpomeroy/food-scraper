@@ -9,6 +9,16 @@ import { createUseStyles } from "react-jss";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { GroceryListContainer } from "../components/GroceryListContainer";
+import {
+  AppShell,
+  Button,
+  Grid,
+  Group,
+  Header,
+  SegmentedControl,
+  Title,
+} from "@mantine/core";
+import Image from "next/image";
 
 const useStyles = createUseStyles({
   container: {
@@ -42,8 +52,12 @@ const useStyles = createUseStyles({
   },
 });
 
+const steps = ["pick-recipes", "order-grocery-list", "export"];
+
 const Home = () => {
   const style = useStyles();
+
+  const [step, setStep] = useState(steps[0]);
 
   const [responseMarkdown, setResponseMarkdown] = useState("");
   const [recipeListData, setRecipeListData] = useState<RecipeListItem[]>([]);
@@ -129,22 +143,14 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (responseMarkdown) {
-      showMarkdownButtonRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [responseMarkdown]);
-
-  useEffect(() => {
-    if (showingMarkdown) {
-      markdownTextAreaRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [showingMarkdown]);
+    submitUrls();
+  }, [pickedRecipeLinks]);
 
   useEffect(() => {
     if (recipeData) {
-      confirmListButtonRef.current.scrollIntoView({ behavior: "smooth" });
+      confirmGroceryListItems();
     }
-  }, [recipeData]);
+  }, [recipeData, groceryListItems]);
 
   const pageRootRef = useRef(null);
 
@@ -160,69 +166,126 @@ const Home = () => {
     );
     setResponseMarkdown(newResponseMarkdown);
 
-    submitButtonRef.current.scrollIntoView();
     navigator.clipboard.writeText(newResponseMarkdown);
   };
 
   return (
-    <div className={style.container} ref={pageRootRef}>
+    <div ref={pageRootRef}>
       <Head>
         <title className={style.title}>Food Scraper</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={style.main}>
-        <h1>Food Scraper</h1>
-        <Config
-          {...{
-            pageRoot: pageRootRef,
-            recipeSubstringsDenyList,
-            setRecipeSubstringsDenyList,
-            removeSubstrings,
-            setRemoveSubstrings,
-            orderSubstrings,
-            setOrderSubstrings,
-          }}
-        />
+      <AppShell
+        header={
+          <Header height={80}>
+            <Grid p={10}>
+              <Grid.Col span={3}>
+                <Group mx="xs">
+                  <Image src="/burger-flat.svg" width="32" height="32" />
+                  <Title>Food Scraper</Title>
+                </Group>
+              </Grid.Col>
+              <Grid.Col span={5}>
+                <SegmentedControl
+                  color="green"
+                  size="lg"
+                  value={step}
+                  onChange={setStep}
+                  data={[
+                    {
+                      value: "pick-recipes",
+                      label: `Pick Recipes ${`(${
+                        Object.keys(pickedRecipeLinks).length
+                      })`}`,
+                    },
+                    {
+                      value: "order-grocery-list",
+                      label: "Order Grocery List",
+                    },
+                    { value: "export", label: "Export" },
+                  ]}
+                />
+              </Grid.Col>
+              <Grid.Col span={2}>
+                <Button
+                  size="lg"
+                  mx="xl"
+                  disabled={
+                    (steps.indexOf(step) === 0 &&
+                      Object.keys(pickedRecipeLinks).length === 0) ||
+                    steps.indexOf(step) === steps.length - 1
+                  }
+                  onClick={() => setStep(steps[steps.indexOf(step) + 1])}
+                >
+                  Next
+                </Button>
+              </Grid.Col>
+              <Grid.Col span={1}>
+                <Config
+                  {...{
+                    pageRoot: pageRootRef,
+                    recipeSubstringsDenyList,
+                    setRecipeSubstringsDenyList,
+                    removeSubstrings,
+                    setRemoveSubstrings,
+                    orderSubstrings,
+                    setOrderSubstrings,
+                  }}
+                />
+              </Grid.Col>
+            </Grid>
+          </Header>
+        }
+      >
+        {step === "pick-recipes" && (
+          <RecipeSelector
+            {...{
+              recipeListData,
+              pickedRecipeLinks,
+              setPickedRecipeLinks,
+              submitButtonRef,
+              submitUrls,
+            }}
+          />
+        )}
 
-        <RecipeSelector
-          {...{
-            recipeListData,
-            pickedRecipeLinks,
-            setPickedRecipeLinks,
-            submitButtonRef,
-            submitUrls,
-          }}
-        />
-
-        {groceryListItems.length > 0 && (
+        {step === "order-grocery-list" && (
           <DndProvider backend={HTML5Backend}>
             <GroceryListContainer
               cards={groceryListItems}
               setCards={setGroceryListItems}
-              confirmList={confirmGroceryListItems}
               confirmButtonRef={confirmListButtonRef}
             />
           </DndProvider>
         )}
 
-        {responseMarkdown && <h3>Copied to clipboard!</h3>}
-        {responseMarkdown && (
-          <button
-            ref={showMarkdownButtonRef}
-            className={style.button}
-            onClick={() => showMarkdownPressed()}
-          >
-            Show markdown
-          </button>
-        )}
+        {step === "export" && (
+          <div>
+            {responseMarkdown && <h3>Copied to clipboard!</h3>}
+            {responseMarkdown && (
+              <button
+                ref={showMarkdownButtonRef}
+                className={style.button}
+                onClick={() => showMarkdownPressed()}
+              >
+                Show markdown
+              </button>
+            )}
 
-        {showingMarkdown && (
-          <div ref={markdownTextAreaRef} className={style.markdownTextArea}>
-            <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
+            {showingMarkdown && (
+              <div ref={markdownTextAreaRef} className={style.markdownTextArea}>
+                <textarea
+                  readOnly
+                  value={responseMarkdown}
+                  rows={100}
+                  cols={100}
+                />
+              </div>
+            )}
           </div>
         )}
-      </main>
+      </AppShell>
     </div>
   );
 };

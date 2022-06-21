@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import GearIcon from "../public/settings-gear.svg";
 import Modal from "react-modal";
 import { SettingsData } from "../utils/types";
 import axios from "axios";
 import { createUseStyles } from "react-jss";
+import { Button } from "@mantine/core";
 
 const useStyles = createUseStyles({
   configTextArea: {
     display: "block",
     height: "200px",
-  },
-  openConfigButton: {
-    width: "80px",
-    position: "absolute",
-    right: "16px",
-    top: "24px",
-    background: "white",
-    border: "0px",
   },
 });
 
@@ -144,12 +136,9 @@ const Config = ({
           Save &amp; Close
         </button>
       </Modal>
-      <button
-        className={styles.openConfigButton}
-        onClick={() => setIsModalOpen(true)}
-      >
-        <GearIcon />
-      </button>
+      <Button size="lg" onClick={() => setIsModalOpen(true)}>
+        Settings
+      </Button>
     </span>
   );
 };

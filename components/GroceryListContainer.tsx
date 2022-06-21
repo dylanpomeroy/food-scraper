@@ -25,7 +25,6 @@ interface Props {
       }[]
     >
   >;
-  confirmList: () => void;
   confirmButtonRef: React.MutableRefObject<any>;
 }
 
@@ -44,7 +43,6 @@ const useStyles = createUseStyles({
 export const GroceryListContainer: FC<Props> = ({
   cards,
   setCards,
-  confirmList,
   confirmButtonRef,
 }: Props) => {
   const style = useStyles();
@@ -99,13 +97,6 @@ export const GroceryListContainer: FC<Props> = ({
       <div className={style.container}>
         {cards.map((card, i) => renderCard(card, i))}
       </div>
-      <button
-        className={style.button}
-        ref={confirmButtonRef}
-        onClick={() => confirmList()}
-      >
-        Confirm
-      </button>
     </>
   );
 };
