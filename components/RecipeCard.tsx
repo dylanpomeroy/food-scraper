@@ -1,36 +1,24 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
 import { RecipeListItem } from "../utils/types";
+import { Button, Container, Image, Anchor, Text, Card } from "@mantine/core";
 
 const useStyles = createUseStyles({
   container: {
     width: "400px",
-    height: "400px",
-    display: "inline-block",
-    margin: "8px",
-  },
-  image: {
-    width: "100%",
+    height: "380px",
   },
   titleContainer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  marginSmall: {
-    margin: "8px",
-  },
-  buttonUnpicked: {
-    background: "white",
+  button: {
+    minWidth: "80px",
     width: "80px",
-    height: "80px",
-    margin: "8px",
-  },
-  buttonPicked: {
-    background: "lightgreen",
-    width: "80px",
-    height: "80px",
-    margin: "8px",
+    height: "113px",
+    borderRadius: "0px",
+    borderBottomRightRadius: "32px",
   },
 });
 
@@ -48,26 +36,38 @@ export const RecipeCard = ({
   const styles = useStyles();
 
   return (
-    <div className={styles.container}>
-      <a href={recipeData.link} target="_blank" rel="noreferrer">
-        <img src={recipeData.image} className={styles.image} />
-      </a>
-      <div className={styles.titleContainer}>
-        <div style={{}}>
-          <h3 className={styles.marginSmall}>{recipeData.title}</h3>
-          <h4 className={styles.marginSmall}>{recipeData.detail}</h4>
-        </div>
-        <button
-          className={
-            recipeData.link in pickedRecipeLinks
-              ? styles.buttonPicked
-              : styles.buttonUnpicked
-          }
+    <Card
+      withBorder
+      shadow="xl"
+      m={0}
+      mb="lg"
+      radius="xl"
+      className={styles.container}
+    >
+      <Card.Section>
+        <Anchor href={recipeData.link} target="_blank" rel="noreferrer">
+          <Image src={recipeData.image} alt={`Dish of ${recipeData.title}`} />
+        </Anchor>
+      </Card.Section>
+
+      <Card.Section className={styles.titleContainer}>
+        <Container px={0}>
+          <Text size="lg" weight="bold">
+            {recipeData.title}
+          </Text>
+          <Text size="md">{recipeData.detail}</Text>
+        </Container>
+        <Button
+          className={styles.button}
+          size="lg"
+          compact
+          color="green"
+          variant={recipeData.link in pickedRecipeLinks ? "outline" : "filled"}
           onClick={() => pickRecipePressed(recipeData.link)}
         >
-          {recipeData.link in pickedRecipeLinks ? "Picked" : "Pick me"}
-        </button>
-      </div>
-    </div>
+          {recipeData.link in pickedRecipeLinks ? "Picked" : "Pick"}
+        </Button>
+      </Card.Section>
+    </Card>
   );
 };

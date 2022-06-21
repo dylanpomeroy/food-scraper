@@ -11,6 +11,8 @@
     "prettier:check": "yarn prettier --check ./"
   },
   "dependencies": {
+    "@mantine/core": "^4.2.10",
+    "@mantine/hooks": "^4.2.10",
     "axios": "^0.21.1",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "cheerio": "^1.0.0-rc.5",

@@ -2,13 +2,10 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 import { RecipeListItem } from "../utils/types";
 import { RecipeCard } from "./RecipeCard";
+import { Button, Text, Container } from "@mantine/core";
 
 const useStyles = createUseStyles({
   container: {
-    textAlign: "center",
-  },
-  pickedAmountLabel: {
-    fontSize: "20px",
     textAlign: "center",
   },
   listContainer: {
@@ -58,11 +55,10 @@ export const RecipeSelector = ({
   };
 
   return (
-    <div className={style.container}>
-      <p className={style.pickedAmountLabel}>
-        Picked <b>{selectedRecipeCount}</b> recipes.
-      </p>
-      <div className={style.listContainer}>
+    <Container className={style.container} fluid>
+      <Text size="xl">Picked {selectedRecipeCount} recipes.</Text>
+
+      <Container className={style.listContainer} fluid>
         {recipeListData.map((recipeData, index) => (
           <RecipeCard
             recipeData={recipeData}
@@ -71,15 +67,17 @@ export const RecipeSelector = ({
             pickedRecipeLinks={pickedRecipeLinks}
           />
         ))}
-      </div>
+      </Container>
 
-      <button
+      <Button
         ref={submitButtonRef}
         className={style.button}
         onClick={() => submitUrls()}
+        color="green"
+        disabled={Object.keys(pickedRecipeLinks).length === 0}
       >
         Submit
-      </button>
-    </div>
+      </Button>
+    </Container>
   );
 };
