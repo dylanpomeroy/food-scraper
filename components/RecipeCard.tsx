@@ -12,6 +12,7 @@ const useStyles = createUseStyles({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    textAlign: "center",
   },
   button: {
     minWidth: "80px",

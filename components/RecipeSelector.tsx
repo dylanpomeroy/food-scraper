@@ -1,27 +1,19 @@
 import React from "react";
-import { createUseStyles } from "react-jss";
 import { RecipeListItem } from "../utils/types";
 import { RecipeCard } from "./RecipeCard";
-import { Button, Text, Container } from "@mantine/core";
+import {
+  Button,
+  Text,
+  Container,
+  Group,
+  Center,
+  ScrollArea,
+} from "@mantine/core";
+import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
-  container: {
-    textAlign: "center",
-  },
-  listContainer: {
-    border: "1px solid black",
-    maxHeight: "70vh",
-    width: "100%",
-    overflow: "scroll",
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  button: {
-    height: "50px",
-    width: "200px",
-    fontSize: "20px",
-    margin: "20px",
+  scrollArea: {
+    height: "75vh",
   },
 });
 
@@ -40,9 +32,9 @@ export const RecipeSelector = ({
   submitButtonRef,
   submitUrls,
 }: Props) => {
-  const style = useStyles();
-
   const selectedRecipeCount = Object.keys(pickedRecipeLinks).length;
+
+  const styles = useStyles();
 
   const pickRecipePressed = (recipeLink: string) => {
     if (!(recipeLink in pickedRecipeLinks)) {
@@ -55,29 +47,33 @@ export const RecipeSelector = ({
   };
 
   return (
-    <Container className={style.container} fluid>
-      <Text size="xl">Picked {selectedRecipeCount} recipes.</Text>
-
-      <Container className={style.listContainer} fluid>
-        {recipeListData.map((recipeData, index) => (
-          <RecipeCard
-            recipeData={recipeData}
-            key={index}
-            pickRecipePressed={pickRecipePressed}
-            pickedRecipeLinks={pickedRecipeLinks}
-          />
-        ))}
-      </Container>
-
-      <Button
-        ref={submitButtonRef}
-        className={style.button}
-        onClick={() => submitUrls()}
-        color="green"
-        disabled={Object.keys(pickedRecipeLinks).length === 0}
-      >
-        Submit
-      </Button>
+    <Container fluid>
+      <Center>
+        <Text size="xl">Picked {selectedRecipeCount} recipes.</Text>
+      </Center>
+      <ScrollArea className={styles.scrollArea} my="xl">
+        <Group position="center">
+          {recipeListData.map((recipeData, index) => (
+            <RecipeCard
+              recipeData={recipeData}
+              key={index}
+              pickRecipePressed={pickRecipePressed}
+              pickedRecipeLinks={pickedRecipeLinks}
+            />
+          ))}
+        </Group>
+      </ScrollArea>
+      <Center>
+        <Button
+          ref={submitButtonRef}
+          size="xl"
+          onClick={() => submitUrls()}
+          color="green"
+          disabled={Object.keys(pickedRecipeLinks).length === 0}
+        >
+          Submit
+        </Button>
+      </Center>
     </Container>
   );
 };
