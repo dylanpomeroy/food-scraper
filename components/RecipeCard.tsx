@@ -63,7 +63,7 @@ export const RecipeCard = ({
           size="lg"
           compact
           color="green"
-          variant={recipeData.link in pickedRecipeLinks ? "outline" : "filled"}
+          variant={recipeData.link in pickedRecipeLinks ? "filled" : "outline"}
           onClick={() => pickRecipePressed(recipeData.link)}
         >
           {recipeData.link in pickedRecipeLinks ? "Picked" : "Pick"}
