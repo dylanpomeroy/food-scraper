@@ -46,7 +46,6 @@ export const GroceryListContainer: FC<Props> = ({
   confirmButtonRef,
 }: Props) => {
   const style = useStyles();
-  console.log(cards);
   const deleteItem = (id: number) => {
     setCards((prevCards) => prevCards.filter((card) => card.id !== id));
   };

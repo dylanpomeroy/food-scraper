@@ -91,7 +91,6 @@ const Home = () => {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      console.log("fetchSettings");
       const response = await axios.get<SettingsData>("/api/settings");
 
       if (response.data.recipeSubstringsDenyList)
@@ -106,8 +105,6 @@ const Home = () => {
   }, []);
 
   const submitUrls = async () => {
-    console.log("submitUrls");
-
     setResponseMarkdown("");
     const recipeData = await axios.post("/api/recipes", {
       urlInfo: Object.keys(pickedRecipeLinks).map((recipeLink) => ({
@@ -116,23 +113,12 @@ const Home = () => {
       })),
     });
 
-    console.log("setting recipe data:");
-    console.log(recipeData);
     setRecipeData(recipeData);
 
     const groceryListItems = recipePrinter.getGroceryList(
       recipeData.data,
       removeSubstrings,
       orderSubstrings
-    );
-    console.log("grocery list item response:");
-    console.log(groceryListItems);
-    console.log("setting grocery list items");
-    console.log(
-      groceryListItems.map((groceryListItem, index) => ({
-        id: index,
-        text: groceryListItem,
-      }))
     );
     setGroceryListItems(
       groceryListItems.map((groceryListItem, index) => ({
@@ -143,7 +129,6 @@ const Home = () => {
   };
 
   const parseRecipesPage = async () => {
-    console.log("parseRecipePages");
     const recipeListData: any = await axios.get("/api/recipes", {
       params: {
         recipeSources: "goodfood",
