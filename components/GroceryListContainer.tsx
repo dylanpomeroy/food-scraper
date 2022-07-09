@@ -3,7 +3,7 @@ import update from "immutability-helper";
 import type { FC } from "react";
 import { useCallback } from "react";
 
-import { Card } from "./GroceryListItem";
+import { GroceryListItem } from "./GroceryListItem";
 import { createUseStyles } from "react-jss";
 
 export interface Item {
@@ -72,7 +72,7 @@ export const GroceryListContainer: FC<Props> = ({
   const renderCard = useCallback(
     (card: { id: number; text: string }, index: number) => {
       return (
-        <Card
+        <GroceryListItem
           key={card.id}
           index={index}
           id={card.id}

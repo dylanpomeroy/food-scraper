@@ -1,18 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import type { Identifier, XYCoord } from "dnd-core";
 import type { FC } from "react";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 import { ItemTypes } from "./ItemTypes";
-
-const style = {
-  border: "1px dashed gray",
-  padding: "0.5rem 1rem",
-  marginBottom: ".5rem",
-  backgroundColor: "white",
-  cursor: "move",
-};
+import { Button, Card, TextInput } from "@mantine/core";
+import { GrDrag, GrClose } from "react-icons/gr";
+import { createUseStyles } from "react-jss";
 
 export interface CardProps {
   id: any;
@@ -29,7 +24,22 @@ interface DragItem {
   type: string;
 }
 
-export const Card: FC<CardProps> = ({
+const useStyles = createUseStyles({
+  dragArea: {
+    display: "inline-block",
+    padding: "7.5px 18px",
+  },
+  dragIcon: {
+    position: "relative",
+    top: "2px",
+  },
+  listItemInput: {
+    display: "inline-block",
+    width: "306px",
+  },
+});
+
+export const GroceryListItem: FC<CardProps> = ({
   id,
   text,
   index,
@@ -37,7 +47,11 @@ export const Card: FC<CardProps> = ({
   deleteItem,
   setItemText,
 }) => {
+  const styles = useStyles();
   const ref = useRef<HTMLDivElement>(null);
+
+  const [canDrag, setCanDrag] = useState(false);
+
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -48,6 +62,9 @@ export const Card: FC<CardProps> = ({
       return {
         handlerId: monitor.getHandlerId(),
       };
+    },
+    drop() {
+      setCanDrag(false);
     },
     hover(item: DragItem, monitor) {
       if (!ref.current) {
@@ -88,13 +105,8 @@ export const Card: FC<CardProps> = ({
         return;
       }
 
-      // Time to actually perform the action
       moveCard(dragIndex, hoverIndex);
 
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
       item.index = hoverIndex;
     },
   });
@@ -107,20 +119,39 @@ export const Card: FC<CardProps> = ({
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    canDrag: () => canDrag,
   });
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
   return (
-    <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setItemText(id, e.target.value)}
-      />
-      <button style={{ float: "right" }} onClick={() => deleteItem(id)}>
-        X
-      </button>
-    </div>
+    <Card
+      px={0}
+      py={"sm"}
+      mb={"sm"}
+      withBorder={true}
+      ref={ref}
+      style={{ opacity }}
+      data-handler-id={handlerId}
+    >
+      <div
+        // only drag the list item when dragging from this icon
+        onMouseDown={() => setCanDrag(true)}
+        className={styles.dragArea}
+      >
+        <GrDrag className={styles.dragIcon} />
+      </div>
+
+      <div className={styles.listItemInput}>
+        <TextInput
+          value={text}
+          onChange={(e) => setItemText(id, e.target.value)}
+        />
+      </div>
+
+      <Button variant={"subtle"} px={"sm"} onClick={() => deleteItem(id)}>
+        <GrClose />
+      </Button>
+    </Card>
   );
 };
