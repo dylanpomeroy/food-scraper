@@ -1,7 +1,7 @@
 import { Low, JSONFile } from "lowdb";
 import { SettingsData } from "./types";
 
-const adapter = new JSONFile<SettingsData>("settingsDb.json");
+const adapter = new JSONFile<SettingsData>("db/settingsDb.json");
 const db = new Low<SettingsData>(adapter);
 
 const initialized = false;
