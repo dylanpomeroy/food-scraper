@@ -6,7 +6,7 @@ import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles({
   scrollArea: {
-    height: "calc(100vh - 170px)",
+    height: "calc(100vh - 122px)",
   },
 });
 
@@ -34,8 +34,8 @@ export const RecipeSelector = ({
   };
 
   return (
-    <Container fluid>
-      <ScrollArea className={styles.scrollArea} my="xl">
+    <Container p={0} fluid>
+      <ScrollArea className={styles.scrollArea}>
         <Group position="center">
           {recipeListData.map((recipeData, index) => (
             <RecipeCard

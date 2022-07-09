@@ -36,6 +36,10 @@ class MyDocument extends Document {
         <Head>
           <link rel="icon" href="link to favicon" />
           <link href="link to font" rel="stylesheet" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
         <body>
           <Main />
