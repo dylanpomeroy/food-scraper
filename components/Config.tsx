@@ -136,7 +136,7 @@ const Config = ({
           Save &amp; Close
         </button>
       </Modal>
-      <Button size="lg" onClick={() => setIsModalOpen(true)}>
+      <Button size="lg" color="green" onClick={() => setIsModalOpen(true)}>
         Settings
       </Button>
     </span>

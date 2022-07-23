@@ -2,13 +2,6 @@ import React from "react";
 import { RecipeListItem } from "../utils/types";
 import { RecipeCard } from "./RecipeCard";
 import { Container, Group, ScrollArea } from "@mantine/core";
-import { createUseStyles } from "react-jss";
-
-const useStyles = createUseStyles({
-  scrollArea: {
-    height: "calc(100vh - 122px)",
-  },
-});
 
 interface Props {
   recipeListData: RecipeListItem[];
@@ -21,8 +14,6 @@ export const RecipeSelector = ({
   pickedRecipeLinks,
   setPickedRecipeLinks,
 }: Props) => {
-  const styles = useStyles();
-
   const pickRecipePressed = (recipeLink: string) => {
     if (!(recipeLink in pickedRecipeLinks)) {
       pickedRecipeLinks[recipeLink] = true;
@@ -35,7 +26,7 @@ export const RecipeSelector = ({
 
   return (
     <Container p={0} fluid>
-      <ScrollArea className={styles.scrollArea}>
+      <ScrollArea>
         <Group position="center">
           {recipeListData.map((recipeData, index) => (
             <RecipeCard

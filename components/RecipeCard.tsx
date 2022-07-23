@@ -5,8 +5,8 @@ import { Button, Container, Image, Anchor, Text, Card } from "@mantine/core";
 
 const useStyles = createUseStyles({
   container: {
-    width: "400px",
-    height: "380px",
+    width: "375px",
+    height: "364px",
   },
   containerMobile: {
     width: "80vw",
@@ -57,7 +57,7 @@ export const RecipeCard = ({
         </Card.Section>
 
         <Card.Section className={styles.titleContainer}>
-          <Container px={0}>
+          <Container px={5}>
             <Text size="lg" weight="bold">
               {recipeData.title}
             </Text>

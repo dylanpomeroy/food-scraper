@@ -9,15 +9,7 @@ import { createUseStyles } from "react-jss";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { GroceryListContainer } from "../components/GroceryListContainer";
-import {
-  AppShell,
-  Button,
-  Grid,
-  Group,
-  Header,
-  SegmentedControl,
-  Title,
-} from "@mantine/core";
+import { Button, Group, Title } from "@mantine/core";
 import Image from "next/image";
 
 const useStyles = createUseStyles({
@@ -36,11 +28,6 @@ const useStyles = createUseStyles({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: {
-    margin: "0",
-    lineHeight: "1.15",
-    fontSize: "4rem",
-  },
   button: {
     height: "50px",
     width: "200px",
@@ -49,6 +36,18 @@ const useStyles = createUseStyles({
   },
   markdownTextArea: {
     border: "1px solid black",
+  },
+  header: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+    justifyContent: "space-between",
+    margin: "8px 16px 16px 16px",
+  },
+  "@media (max-width: 649px)": {
+    header: {
+      justifyContent: "center",
+    },
   },
 });
 
@@ -64,15 +63,14 @@ const Home = () => {
   const [pickedRecipeLinks, setPickedRecipeLinks] = useState<{
     [key: string]: boolean;
   }>({});
-  const [showingMarkdown, setShowingMarkdown] = useState(false);
 
   const [recipeSubstringsDenyList, setRecipeSubstringsDenyList] = useState([]);
   const [removeSubstrings, setRemoveSubstrings] = useState([]);
   const [orderSubstrings, setOrderSubstrings] = useState([]);
+  const [copiedToClipboard, setCopiedToClipboard] = useState(false);
 
   const submitButtonRef = useRef(null);
   const confirmListButtonRef = useRef(null);
-  const showMarkdownButtonRef = useRef(null);
   const markdownTextAreaRef = useRef(null);
 
   const [recipeData, setRecipeData] = useState<any>();
@@ -138,10 +136,6 @@ const Home = () => {
     setRecipeListData(recipeListData.data.goodfood);
   };
 
-  const showMarkdownPressed = async () => {
-    setShowingMarkdown(true);
-  };
-
   useEffect(() => {
     submitUrls();
   }, [pickedRecipeLinks]);
@@ -166,126 +160,92 @@ const Home = () => {
     );
     setResponseMarkdown(newResponseMarkdown);
 
-    navigator.clipboard.writeText(newResponseMarkdown);
+    if (navigator.clipboard) {
+      navigator.clipboard?.writeText(newResponseMarkdown);
+      setCopiedToClipboard(true);
+    } else {
+      setCopiedToClipboard(false);
+    }
   };
 
   return (
     <div ref={pageRootRef}>
       <Head>
-        <title className={style.title}>Food Scraper</title>
+        <title>Food Scraper</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppShell
-        header={
-          <Header height={80}>
-            <Grid p={10}>
-              <Grid.Col span={3}>
-                <Group mx="xs">
-                  <Image src="/burger-flat.svg" width="32" height="32" />
-                  <Title>Food Scraper</Title>
-                </Group>
-              </Grid.Col>
-              <Grid.Col span={5}>
-                <SegmentedControl
-                  color="green"
-                  size="lg"
-                  value={step}
-                  onChange={setStep}
-                  data={[
-                    {
-                      value: "pick-recipes",
-                      label: `Pick Recipes ${`(${
-                        Object.keys(pickedRecipeLinks).length
-                      })`}`,
-                    },
-                    {
-                      value: "order-grocery-list",
-                      label: "Order Grocery List",
-                    },
-                    { value: "export", label: "Export" },
-                  ]}
-                />
-              </Grid.Col>
-              <Grid.Col span={2}>
-                <Button
-                  size="lg"
-                  mx="xl"
-                  disabled={
-                    (steps.indexOf(step) === 0 &&
-                      Object.keys(pickedRecipeLinks).length === 0) ||
-                    steps.indexOf(step) === steps.length - 1
-                  }
-                  onClick={() => setStep(steps[steps.indexOf(step) + 1])}
-                >
-                  Next
-                </Button>
-              </Grid.Col>
-              <Grid.Col span={1}>
-                <Config
-                  {...{
-                    pageRoot: pageRootRef,
-                    recipeSubstringsDenyList,
-                    setRecipeSubstringsDenyList,
-                    removeSubstrings,
-                    setRemoveSubstrings,
-                    orderSubstrings,
-                    setOrderSubstrings,
-                  }}
-                />
-              </Grid.Col>
-            </Grid>
-          </Header>
-        }
-      >
-        {step === "pick-recipes" && (
-          <RecipeSelector
+      <div className={style.header}>
+        <Group mx="xs">
+          <Image src="/burger-flat.svg" width="32" height="32" />
+          <Title>Food Scraper</Title>
+        </Group>
+        <div>
+          <Button
+            size="lg"
+            disabled={steps.indexOf(step) === 0}
+            onClick={() => setStep(steps[steps.indexOf(step) - 1])}
+          >
+            Back
+          </Button>
+          <Button
+            size="lg"
+            ml="xs"
+            mr="xl"
+            disabled={
+              (steps.indexOf(step) === 0 &&
+                Object.keys(pickedRecipeLinks).length === 0) ||
+              steps.indexOf(step) === steps.length - 1
+            }
+            onClick={() => setStep(steps[steps.indexOf(step) + 1])}
+          >
+            Next
+          </Button>
+          <Config
             {...{
-              recipeListData,
-              pickedRecipeLinks,
-              setPickedRecipeLinks,
-              submitButtonRef,
-              submitUrls,
+              pageRoot: pageRootRef,
+              recipeSubstringsDenyList,
+              setRecipeSubstringsDenyList,
+              removeSubstrings,
+              setRemoveSubstrings,
+              orderSubstrings,
+              setOrderSubstrings,
             }}
           />
-        )}
+        </div>
+      </div>
 
-        {step === "order-grocery-list" && (
-          <DndProvider backend={HTML5Backend}>
-            <GroceryListContainer
-              cards={groceryListItems}
-              setCards={setGroceryListItems}
-              confirmButtonRef={confirmListButtonRef}
-            />
-          </DndProvider>
-        )}
+      {step === "pick-recipes" && (
+        <RecipeSelector
+          {...{
+            recipeListData,
+            pickedRecipeLinks,
+            setPickedRecipeLinks,
+            submitButtonRef,
+            submitUrls,
+          }}
+        />
+      )}
 
-        {step === "export" && (
-          <div>
-            {responseMarkdown && <h3>Copied to clipboard!</h3>}
-            {responseMarkdown && (
-              <button
-                ref={showMarkdownButtonRef}
-                className={style.button}
-                onClick={() => showMarkdownPressed()}
-              >
-                Show markdown
-              </button>
-            )}
+      {step === "order-grocery-list" && (
+        <DndProvider backend={HTML5Backend}>
+          <GroceryListContainer
+            cards={groceryListItems}
+            setCards={setGroceryListItems}
+            confirmButtonRef={confirmListButtonRef}
+          />
+        </DndProvider>
+      )}
 
-            {showingMarkdown && (
-              <div ref={markdownTextAreaRef} className={style.markdownTextArea}>
-                <textarea
-                  readOnly
-                  value={responseMarkdown}
-                  rows={100}
-                  cols={100}
-                />
-              </div>
-            )}
+      {step === "export" && (
+        <div>
+          {copiedToClipboard && <h3>Copied to clipboard!</h3>}
+
+          <div ref={markdownTextAreaRef} className={style.markdownTextArea}>
+            <textarea readOnly value={responseMarkdown} rows={100} cols={100} />
           </div>
-        )}
-      </AppShell>
+        </div>
+      )}
     </div>
   );
 };
